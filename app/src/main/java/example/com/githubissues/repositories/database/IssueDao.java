@@ -14,7 +14,7 @@ import example.com.githubissues.entities.Issue;
 @Dao
 public interface IssueDao {
   @Query("SELECT * FROM Issues")
-  LiveData<List<Issue>> getAllQuestions();
+  LiveData<List<Issue>> getAllIssue();
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insert(Issue issue);

@@ -57,15 +57,16 @@ public class IssueRepositoryImpl implements IssueRepository {
                 liveData.setValue(null);
             }
         });
+            return liveData;
         }
         else
         {
             // pick from the DB
-            Log.e("STEFANO","carico da tabella per ora un insieme vuoto!");
-            liveData.setValue(null);
+            Log.e("STEFANO","carico da tabella locale!");
+            return App.get().getDB().issueDao().getAllIssue();
 
         }
-        return liveData;
+
     }
 
 
