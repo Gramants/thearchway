@@ -2,22 +2,24 @@ package example.com.githubissues.repositories;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import example.com.githubissues.App;
 import example.com.githubissues.entities.ApiResponse;
 import example.com.githubissues.entities.Issue;
 import example.com.githubissues.api.GithubApiService;
+import example.com.githubissues.repositories.database.IssueDb;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by James on 5/21/2017.
- */
+
 
 public class IssueRepositoryImpl implements IssueRepository {
 
@@ -32,6 +34,11 @@ public class IssueRepositoryImpl implements IssueRepository {
         mApiService = retrofit.create(GithubApiService.class);
     }
 
+
+
+
+
+
     public LiveData<List<Issue>> getIssues(String owner, String repo,Boolean forceRemote) {
         final MutableLiveData<List<Issue>> liveData = new MutableLiveData<>();
 
@@ -41,6 +48,7 @@ public class IssueRepositoryImpl implements IssueRepository {
         call.enqueue(new Callback<List<Issue>>() {
             @Override
             public void onResponse(Call<List<Issue>> call, Response<List<Issue>> response) {
+                saveDataToLocal(response.body());
                 liveData.setValue(response.body());
             }
 
@@ -60,4 +68,36 @@ public class IssueRepositoryImpl implements IssueRepository {
         return liveData;
     }
 
+
+    private void saveDataToLocal(List<Issue> issues) {
+
+        new AddIssueAsyncTask(App.get().getDB()).execute(issues);
+       // https://stackoverflow.com/questions/44241861/room-persistent-library-with-new-thread-and-data-binding-issue
+       //https://stackoverflow.com/questions/44241861/room-persistent-library-with-new-thread-and-data-binding-issue
+
+    }
+
+
+
+
+    private static class AddIssueAsyncTask extends AsyncTask<List<Issue>, Void, Void> {
+
+        private IssueDb db;
+
+        public AddIssueAsyncTask(IssueDb userDatabase) {
+            db = userDatabase;
+        }
+
+        @Override
+        protected Void doInBackground(List<Issue>... issues) {
+            db.issueDao().deleteAll();
+            List<Issue> results = new ArrayList<Issue>();
+            results=issues[0];
+            for (Issue issue : results) {
+                db.issueDao().insert(issue);
+            }
+            return null;
+
+    }
+}
 }

@@ -117,6 +117,7 @@ public class MainActivity extends LifecycleActivity {
         setProgress(false);
         if (issues != null && issues.size() > 0) {
             mAdapter.addIssues(issues);
+
         } else {
 
             mAdapter.clearIssues();
@@ -150,14 +151,6 @@ public class MainActivity extends LifecycleActivity {
         mViewModel.getApiResponse().observe(this, apiResponse -> {
             if (apiResponse != null) {
                handleResponse(apiResponse);
-            }
-            else
-            {
-                Toast.makeText(
-                        this,
-                        "No issues found in the database!",
-                        Toast.LENGTH_SHORT
-                ).show();
             }
         });
     }
