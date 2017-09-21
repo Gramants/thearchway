@@ -54,14 +54,10 @@ public class MainActivity extends LifecycleActivity {
                         setProgress(true);
                         mViewModel.loadIssues(query[0], query[1],true);
                     } else {
-                        handleError(new Exception(
-                                "Error wrong format of input. Required format owner/repository_name")
-                        );
+                        handleError("Error wrong format of input. Required format owner/repository_name");
                     }
                 } else {
-                    handleError(new Exception(
-                            "Repository name empty. Required format owner/repository_name")
-                    );
+                    handleError("Repository name empty. Required format owner/repository_name");
                 }
                 return true;
             }
@@ -70,10 +66,10 @@ public class MainActivity extends LifecycleActivity {
 
         // Handle changes emitted by LiveData
         mViewModel.getApiResponse().observe(this, apiResponse -> {
-            if (apiResponse.getError() != null) {
-                handleError(apiResponse.getError());
+            if (apiResponse== null) {
+                handleError("No data to show!");
             } else {
-                handleResponse(apiResponse.getIssues());
+                handleResponse(apiResponse);
             }
         });
     }
@@ -132,11 +128,11 @@ public class MainActivity extends LifecycleActivity {
         }
     }
 
-    private void handleError(Throwable error) {
+    private void handleError(String msg) {
         setProgress(false);
         mAdapter.clearIssues();
-        Log.e(TAG, "error occured: " + error.toString());
-        Toast.makeText(this, "Oops! Some error occured.", Toast.LENGTH_SHORT).show();
+        Log.e(TAG, msg);
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     public void setProgress(boolean flag) {
@@ -152,8 +148,8 @@ public class MainActivity extends LifecycleActivity {
         super.onStart();
         mViewModel.loadIssues("fromdb", "fromdb",false);
         mViewModel.getApiResponse().observe(this, apiResponse -> {
-            if (apiResponse.getIssues() != null) {
-               handleResponse(apiResponse.getIssues());
+            if (apiResponse != null) {
+               handleResponse(apiResponse);
             }
             else
             {

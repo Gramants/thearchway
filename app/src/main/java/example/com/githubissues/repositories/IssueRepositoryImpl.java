@@ -32,8 +32,8 @@ public class IssueRepositoryImpl implements IssueRepository {
         mApiService = retrofit.create(GithubApiService.class);
     }
 
-    public LiveData<ApiResponse> getIssues(String owner, String repo,Boolean forceRemote) {
-        final MutableLiveData<ApiResponse> liveData = new MutableLiveData<>();
+    public LiveData<List<Issue>> getIssues(String owner, String repo,Boolean forceRemote) {
+        final MutableLiveData<List<Issue>> liveData = new MutableLiveData<>();
 
         if (forceRemote)
         {
@@ -41,12 +41,12 @@ public class IssueRepositoryImpl implements IssueRepository {
         call.enqueue(new Callback<List<Issue>>() {
             @Override
             public void onResponse(Call<List<Issue>> call, Response<List<Issue>> response) {
-                liveData.setValue(new ApiResponse(response.body()));
+                liveData.setValue(response.body());
             }
 
             @Override
             public void onFailure(Call<List<Issue>> call, Throwable t) {
-                liveData.setValue(new ApiResponse(t));
+                liveData.setValue(null);
             }
         });
         }
@@ -54,8 +54,7 @@ public class IssueRepositoryImpl implements IssueRepository {
         {
             // pick from the DB
             Log.e("STEFANO","carico da tabella per ora un insieme vuoto!");
-            List temp = null;
-            liveData.setValue(new ApiResponse(temp));
+            liveData.setValue(null);
 
         }
         return liveData;

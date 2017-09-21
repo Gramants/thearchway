@@ -2,13 +2,13 @@ package example.com.githubissues.repositories;
 
 import android.arch.lifecycle.LiveData;
 
-import example.com.githubissues.entities.ApiResponse;
+import java.util.List;
 
-/**
- * Created by James on 5/25/2017.
- */
+import example.com.githubissues.entities.ApiResponse;
+import example.com.githubissues.entities.Issue;
+
 
 public interface IssueRepository {
 
-    LiveData<ApiResponse> getIssues(String owner, String repo, Boolean forceremote);
+    LiveData<List<Issue>> getIssues(String owner, String repo, Boolean forceremote);
 }

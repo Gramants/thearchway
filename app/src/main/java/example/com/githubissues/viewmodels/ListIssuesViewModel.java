@@ -5,17 +5,17 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
+import java.util.List;
+
 import example.com.githubissues.entities.ApiResponse;
+import example.com.githubissues.entities.Issue;
 import example.com.githubissues.repositories.IssueRepository;
 import example.com.githubissues.repositories.IssueRepositoryImpl;
 
-/**
- * Created by James on 5/21/2017.
- */
 
 public class ListIssuesViewModel extends ViewModel {
 
-    private MediatorLiveData<ApiResponse> mApiResponse;
+    private MediatorLiveData<List<Issue>> mApiResponse;
     private IssueRepository mIssueRepository;
 
     public ListIssuesViewModel() {
@@ -24,13 +24,13 @@ public class ListIssuesViewModel extends ViewModel {
     }
 
     @NonNull
-    public LiveData<ApiResponse> getApiResponse() {
+    public LiveData<List<Issue>> getApiResponse() {
         return mApiResponse;
     }
 
 
-    public LiveData<ApiResponse> loadIssues(@NonNull String user, String repo,Boolean forceremote) {
-
+    public LiveData<List<Issue>> loadIssues(@NonNull String user, String repo,Boolean forceremote) {
+       // https://stackoverflow.com/questions/45679896/android-mediatorlivedata-observer
         mApiResponse.addSource(
                 mIssueRepository.getIssues(user, repo,forceremote),
                 apiResponse -> mApiResponse.setValue(apiResponse)

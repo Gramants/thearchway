@@ -1,13 +1,19 @@
 package example.com.githubissues.entities;
 
-/**
- * Created by shahbaz on 14/05/17.
- */
+
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
+@Entity(tableName = "Issues")
 public class Issue {
+
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
 
     @SerializedName("url")
     @Expose
@@ -66,6 +72,13 @@ public class Issue {
         this.title = title;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     //public User getUser() {
     //    return user;
     //}
