@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-import example.com.githubissues.entities.ApiResponse;
 import example.com.githubissues.entities.Issue;
 import example.com.githubissues.repositories.IssueRepository;
 import example.com.githubissues.repositories.IssueRepositoryImpl;
@@ -37,7 +36,8 @@ public class ListIssuesViewModel extends ViewModel {
         );
 
 
-
+        //https://github.com/florent37/NewAndroidArchitecture-Component-Github
+        // databinding
         return mApiResponse;
     }
 

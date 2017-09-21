@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 
 import java.util.List;
 
-import example.com.githubissues.entities.ApiResponse;
 import example.com.githubissues.entities.Issue;
 
 

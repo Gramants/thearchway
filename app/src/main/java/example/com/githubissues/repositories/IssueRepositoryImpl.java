@@ -9,9 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import example.com.githubissues.App;
-import example.com.githubissues.entities.ApiResponse;
 import example.com.githubissues.entities.Issue;
-import example.com.githubissues.api.GithubApiService;
+import example.com.githubissues.repositories.api.GithubApiService;
 import example.com.githubissues.repositories.database.IssueDb;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,7 +47,7 @@ public class IssueRepositoryImpl implements IssueRepository {
         call.enqueue(new Callback<List<Issue>>() {
             @Override
             public void onResponse(Call<List<Issue>> call, Response<List<Issue>> response) {
-                saveDataToLocal(response.body());
+                deleteTableAndSaveDataToLocal(response.body());
                 liveData.setValue(response.body());
             }
 
@@ -70,7 +69,7 @@ public class IssueRepositoryImpl implements IssueRepository {
     }
 
 
-    private void saveDataToLocal(List<Issue> issues) {
+    private void deleteTableAndSaveDataToLocal(List<Issue> issues) {
 
         new AddIssueAsyncTask(App.get().getDB()).execute(issues);
        // https://stackoverflow.com/questions/44241861/room-persistent-library-with-new-thread-and-data-binding-issue
