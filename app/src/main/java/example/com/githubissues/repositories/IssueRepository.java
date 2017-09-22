@@ -10,4 +10,6 @@ import example.com.githubissues.entities.Issue;
 public interface IssueRepository {
 
     LiveData<List<Issue>> getIssues(String owner, String repo, Boolean forceremote);
+
+    LiveData<Issue> getIssueFromDb(int id);
 }

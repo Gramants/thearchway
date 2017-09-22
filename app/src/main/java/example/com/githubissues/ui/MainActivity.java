@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.LifecycleActivity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import example.com.githubissues.adapters.DataAdapter;
 import example.com.githubissues.R;
+import example.com.githubissues.adapters.RecyclerItemClickListener;
 import example.com.githubissues.entities.Issue;
 import example.com.githubissues.viewmodels.ListIssuesViewModel;
 
@@ -69,6 +71,7 @@ public class MainActivity extends LifecycleActivity {
             if (apiResponse== null) {
                 handleError("No data to show!");
             } else {
+                this.caches=apiResponse;
                 handleResponse(apiResponse);
             }
         });
@@ -104,6 +107,24 @@ public class MainActivity extends LifecycleActivity {
         mRecyclerView.addItemDecoration(mDividerItemDecoration);
         mAdapter = new DataAdapter(getLayoutInflater());
         mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getApplicationContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+
+                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                        Bundle b = new Bundle();
+                        b.putInt("id", ((Issue) caches.get(position)).getNumber());
+                        intent.putExtras(b);
+                        startActivity(intent);
+
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        // do whatever
+                    }
+                })
+        );
     }
 
     private void hideSoftKeyboard(Activity activity, View view) {
@@ -150,7 +171,9 @@ public class MainActivity extends LifecycleActivity {
         mViewModel.loadIssues("fromdb", "fromdb",false);
         mViewModel.getApiResponse().observe(this, apiResponse -> {
             if (apiResponse != null) {
-               handleResponse(apiResponse);
+                this.caches=apiResponse;
+                handleResponse(apiResponse);
+
             }
         });
     }

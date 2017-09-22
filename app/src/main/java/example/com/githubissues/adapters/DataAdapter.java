@@ -38,6 +38,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.Holder> {
         //holder.mTextViewCreator.setText(mIssueList.get(position).getUser().getLogin());
         // change con USER!
         holder.mTextViewCreator.setText(mIssueList.get(position).getNumber()!=null?"cippa":"lippa");
+
+
     }
 
     @Override

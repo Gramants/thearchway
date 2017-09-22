@@ -1,6 +1,7 @@
 package example.com.githubissues.entities;
 
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -12,8 +13,8 @@ import com.google.gson.annotations.SerializedName;
 public class Issue {
 
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    //@PrimaryKey(autoGenerate = true)
+    //private int id;
 
     @SerializedName("url")
     @Expose
@@ -21,7 +22,10 @@ public class Issue {
     @SerializedName("repository_url")
     @Expose
     private String repositoryUrl;
+
+    @PrimaryKey
     @SerializedName("number")
+    @ColumnInfo(name = "id")
     @Expose
     private Integer number;
     @SerializedName("title")
@@ -72,13 +76,13 @@ public class Issue {
         this.title = title;
     }
 
-    public int getId() {
-        return id;
-    }
+    //public int getId() {
+    //    return id;
+    //}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    //public void setId(int id) {
+    //     this.id = id;
+    //}
     //public User getUser() {
     //    return user;
     //}

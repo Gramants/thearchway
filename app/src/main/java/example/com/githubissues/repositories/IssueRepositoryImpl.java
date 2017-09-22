@@ -68,6 +68,12 @@ public class IssueRepositoryImpl implements IssueRepository {
 
     }
 
+    @Override
+    public LiveData<Issue> getIssueFromDb(int id) {
+        return App.get().getDB().issueDao().getIssueById(id);
+
+    }
+
 
     private void deleteTableAndSaveDataToLocal(List<Issue> issues) {
 

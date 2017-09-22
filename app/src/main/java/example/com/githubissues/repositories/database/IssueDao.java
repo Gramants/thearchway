@@ -16,9 +16,13 @@ public interface IssueDao {
   @Query("SELECT * FROM Issues")
   LiveData<List<Issue>> getAllIssue();
 
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insert(Issue issue);
+  @Query("SELECT * FROM Issues where id = :id")
+  LiveData<Issue> getIssueById(int id);
 
   @Query("DELETE FROM Issues")
   void deleteAll();
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  void insert(Issue issue);
+
 }
