@@ -60,7 +60,7 @@ public class DetailActivity extends LifecycleActivity {
     }
 
     private void handleResponse(Issue issue, ActivityDetailBinding binding) {
-
+        binding.setIssue(issue);
         Log.e("STEFANO","Issue title: "+issue.getTitle());
 
     }
