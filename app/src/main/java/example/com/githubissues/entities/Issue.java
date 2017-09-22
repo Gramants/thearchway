@@ -4,14 +4,15 @@ package example.com.githubissues.entities;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.databinding.BaseObservable;
+import android.databinding.ObservableField;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
 @Entity(tableName = "Issues")
-public class Issue {
-
+public class Issue  {
 
     //@PrimaryKey(autoGenerate = true)
     //private int id;
@@ -43,6 +44,16 @@ public class Issue {
     @SerializedName("body")
     @Expose
     private String body;
+
+    public Issue(String url, String repositoryUrl, Integer number, String title, String state, String createdAt, String body) {
+        this.url = url;
+        this.repositoryUrl = repositoryUrl;
+        this.number = number;
+        this.title = title;
+        this.state = state;
+        this.createdAt = createdAt;
+        this.body = body;
+    }
 
     public String getUrl() {
         return url;

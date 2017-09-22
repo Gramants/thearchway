@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.LifecycleActivity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -24,6 +25,7 @@ import java.util.List;
 import example.com.githubissues.R;
 import example.com.githubissues.adapters.DataAdapter;
 import example.com.githubissues.adapters.RecyclerItemClickListener;
+import example.com.githubissues.databinding.ActivityDetailBinding;
 import example.com.githubissues.entities.Issue;
 import example.com.githubissues.viewmodels.DetailViewModel;
 import example.com.githubissues.viewmodels.ListIssuesViewModel;
@@ -42,13 +44,13 @@ public class DetailActivity extends LifecycleActivity {
         if(b != null)
             id = b.getInt("id");
 
-        setContentView(R.layout.activity_detail);
+        ActivityDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
         mViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
         mViewModel.loadIssue(id);
 
         mViewModel.getdbResponse().observe(this, apiResponse -> {
-                handleResponse(apiResponse);
+                handleResponse(apiResponse,binding);
         });
     }
 
@@ -57,7 +59,7 @@ public class DetailActivity extends LifecycleActivity {
         super.onDestroy();
     }
 
-    private void handleResponse(Issue  issue) {
+    private void handleResponse(Issue issue, ActivityDetailBinding binding) {
 
         Log.e("STEFANO","Issue title: "+issue.getTitle());
 
