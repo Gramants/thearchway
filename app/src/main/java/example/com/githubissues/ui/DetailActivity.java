@@ -27,6 +27,7 @@ import example.com.githubissues.adapters.DataAdapter;
 import example.com.githubissues.adapters.RecyclerItemClickListener;
 import example.com.githubissues.databinding.ActivityDetailBinding;
 import example.com.githubissues.entities.Issue;
+import example.com.githubissues.entities.IssueLinearized;
 import example.com.githubissues.viewmodels.DetailViewModel;
 import example.com.githubissues.viewmodels.ListIssuesViewModel;
 
@@ -59,7 +60,7 @@ public class DetailActivity extends LifecycleActivity {
         super.onDestroy();
     }
 
-    private void handleResponse(Issue issue, ActivityDetailBinding binding) {
+    private void handleResponse(IssueLinearized issue, ActivityDetailBinding binding) {
         binding.setIssue(issue);
         Log.e("STEFANO","Issue title: "+issue.getTitle());
 

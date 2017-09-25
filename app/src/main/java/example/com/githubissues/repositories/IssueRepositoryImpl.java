@@ -10,6 +10,7 @@ import java.util.List;
 
 import example.com.githubissues.App;
 import example.com.githubissues.entities.Issue;
+import example.com.githubissues.entities.IssueLinearized;
 import example.com.githubissues.repositories.api.GithubApiService;
 import example.com.githubissues.repositories.database.IssueDb;
 import retrofit2.Call;
@@ -38,8 +39,8 @@ public class IssueRepositoryImpl implements IssueRepository {
 
 
 
-    public LiveData<List<Issue>> getIssues(String owner, String repo,Boolean forceRemote) {
-        final MutableLiveData<List<Issue>> liveData = new MutableLiveData<>();
+    public LiveData<List<IssueLinearized>> getIssues(String owner, String repo, Boolean forceRemote) {
+        final MutableLiveData<List<IssueLinearized>> liveData = new MutableLiveData<>();
 
         if (forceRemote)
         {
@@ -47,8 +48,38 @@ public class IssueRepositoryImpl implements IssueRepository {
         call.enqueue(new Callback<List<Issue>>() {
             @Override
             public void onResponse(Call<List<Issue>> call, Response<List<Issue>> response) {
-                deleteTableAndSaveDataToLocal(response.body());
-                liveData.setValue(response.body());
+
+                ArrayList<IssueLinearized> transformed=new ArrayList();
+                transformed=LinearizeIssue(response);
+                deleteTableAndSaveDataToLocal(transformed);
+
+
+                liveData.setValue(transformed);
+
+
+                // use the transformation for livedata!
+                /*
+                LiveData<List<String>> liveCustomerIds=
+                        Transformations.map(store.allCustomers(),
+                                new Function<List<Customer>, List<String>>() {
+                                    @Override
+                                    public List<String> apply(List<Customer> customers) {
+                                        ArrayList<String> result=new ArrayList<>();
+
+                                        for (Customer customer : customers) {
+                                            result.add(customer.id);
+                                        }
+
+                                        return(result);
+                                    }
+                                });
+
+                  */
+
+
+
+
+
             }
 
             @Override
@@ -56,6 +87,8 @@ public class IssueRepositoryImpl implements IssueRepository {
                 liveData.setValue(null);
             }
         });
+
+
             return liveData;
         }
         else
@@ -68,14 +101,24 @@ public class IssueRepositoryImpl implements IssueRepository {
 
     }
 
+    private ArrayList<IssueLinearized> LinearizeIssue(Response<List<Issue>> issues) {
+        ArrayList<IssueLinearized> transformed=new ArrayList();
+
+        for (Issue issue : issues.body()) {
+            transformed.add(new IssueLinearized(issue.getUrl(),issue.getRepositoryUrl(),issue.getNumber(),issue.getTitle(),issue.getState(),issue.getCreatedAt(),issue.getBody(),issue.getUser().getLogin(),issue.getUser().getUrl()));
+        }
+
+        return transformed;
+    }
+
     @Override
-    public LiveData<Issue> getIssueFromDb(int id) {
+    public LiveData<IssueLinearized> getIssueFromDb(int id) {
         return App.get().getDB().issueDao().getIssueById(id);
 
     }
 
 
-    private void deleteTableAndSaveDataToLocal(List<Issue> issues) {
+    private void deleteTableAndSaveDataToLocal(ArrayList<IssueLinearized> issues) {
 
         new AddIssueAsyncTask(App.get().getDB()).execute(issues);
        // https://stackoverflow.com/questions/44241861/room-persistent-library-with-new-thread-and-data-binding-issue
@@ -86,7 +129,7 @@ public class IssueRepositoryImpl implements IssueRepository {
 
 
 
-    private static class AddIssueAsyncTask extends AsyncTask<List<Issue>, Void, Void> {
+    private static class AddIssueAsyncTask extends AsyncTask<List<IssueLinearized>, Void, Void> {
 
         private IssueDb db;
 
@@ -95,11 +138,11 @@ public class IssueRepositoryImpl implements IssueRepository {
         }
 
         @Override
-        protected Void doInBackground(List<Issue>... issues) {
+        protected Void doInBackground(List<IssueLinearized>... issues) {
             db.issueDao().deleteAll();
-            List<Issue> results = new ArrayList<Issue>();
+            List<IssueLinearized> results = new ArrayList<IssueLinearized>();
             results=issues[0];
-            for (Issue issue : results) {
+            for (IssueLinearized issue : results) {
                 db.issueDao().insert(issue);
             }
             return null;

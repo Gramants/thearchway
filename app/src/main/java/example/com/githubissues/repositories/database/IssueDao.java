@@ -9,20 +9,21 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 import example.com.githubissues.entities.Issue;
+import example.com.githubissues.entities.IssueLinearized;
 
 
 @Dao
 public interface IssueDao {
   @Query("SELECT * FROM Issues")
-  LiveData<List<Issue>> getAllIssue();
+  LiveData<List<IssueLinearized>> getAllIssue();
 
   @Query("SELECT * FROM Issues where id = :id")
-  LiveData<Issue> getIssueById(int id);
+  LiveData<IssueLinearized> getIssueById(int id);
 
   @Query("DELETE FROM Issues")
   void deleteAll();
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insert(Issue issue);
+  void insert(IssueLinearized issue);
 
 }

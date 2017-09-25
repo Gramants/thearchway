@@ -4,7 +4,7 @@
     <data>
         <variable
             name="issue"
-            type="example.com.githubissues.entities.Issue" />
+            type="example.com.githubissues.entities.IssueLinearized" />
     </data>
 <LinearLayout
     android:id="@+id/movies_layout"

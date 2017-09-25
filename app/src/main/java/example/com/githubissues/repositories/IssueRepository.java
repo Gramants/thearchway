@@ -4,12 +4,12 @@ import android.arch.lifecycle.LiveData;
 
 import java.util.List;
 
-import example.com.githubissues.entities.Issue;
+import example.com.githubissues.entities.IssueLinearized;
 
 
 public interface IssueRepository {
 
-    LiveData<List<Issue>> getIssues(String owner, String repo, Boolean forceremote);
+    LiveData<List<IssueLinearized>> getIssues(String owner, String repo, Boolean forceremote);
 
-    LiveData<Issue> getIssueFromDb(int id);
+    LiveData<IssueLinearized> getIssueFromDb(int id);
 }

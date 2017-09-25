@@ -11,6 +11,7 @@ import java.util.List;
 
 import example.com.githubissues.R;
 import example.com.githubissues.entities.Issue;
+import example.com.githubissues.entities.IssueLinearized;
 
 /**
  * Created by shahbaz on 14/05/17.
@@ -18,7 +19,7 @@ import example.com.githubissues.entities.Issue;
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.Holder> {
 
     private final LayoutInflater mInflator;
-    private List<Issue> mIssueList;
+    private List<IssueLinearized> mIssueList;
 
     public DataAdapter(LayoutInflater inflator) {
         mInflator = inflator;
@@ -35,9 +36,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.Holder> {
         holder.mTextViewTitle.setText(mIssueList.get(position).getTitle());
         String id = mIssueList.get(position).getNumber().toString();
         holder.mTextViewId.setText(id);
-        //holder.mTextViewCreator.setText(mIssueList.get(position).getUser().getLogin());
-        // change con USER!
-        holder.mTextViewCreator.setText(mIssueList.get(position).getNumber()!=null?"cippa":"lippa");
+        holder.mTextViewCreator.setText(mIssueList.get(position).getUsername());
 
 
     }
@@ -47,7 +46,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.Holder> {
         return mIssueList.size();
     }
 
-    public void addIssues(List<Issue> issues) {
+    public void addIssues(List<IssueLinearized> issues) {
         mIssueList.clear();
         mIssueList.addAll(issues);
         notifyDataSetChanged();

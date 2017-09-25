@@ -4,46 +4,42 @@ package example.com.githubissues.entities;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.databinding.BaseObservable;
-import android.databinding.ObservableField;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
+@Entity(tableName = "Issues")
+public class IssueLinearized {
 
-public class Issue  {
 
-    //@PrimaryKey(autoGenerate = true)
-    //private int id;
 
-    @SerializedName("url")
-    @Expose
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    private Integer number;
+
+
     private String url;
-    @SerializedName("repository_url")
-    @Expose
+
     private String repositoryUrl;
 
-    @SerializedName("number")
-    @Expose
-    private Integer number;
-    @SerializedName("title")
-    @Expose
-    private String title;
-    @SerializedName("user")
-    @Expose
-    private User user;
 
-    @SerializedName("state")
-    @Expose
+    private String title;
+
+
+    private String username;
+
+    private String userurl;
+
     private String state;
-    @Expose
+
     private String createdAt;
-    @SerializedName("body")
-    @Expose
+
     private String body;
 
-    public Issue(String url, String repositoryUrl, Integer number, String title, String state, String createdAt, String body) {
+
+
+    public IssueLinearized(String url, String repositoryUrl, Integer number, String title,String state, String createdAt, String body, String username, String userurl) {
         this.url = url;
         this.repositoryUrl = repositoryUrl;
         this.number = number;
@@ -51,7 +47,27 @@ public class Issue  {
         this.state = state;
         this.createdAt = createdAt;
         this.body = body;
+        this.username = username;
+        this.userurl = userurl;
     }
+
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUserurl() {
+        return userurl;
+    }
+
+    public void setUserurl(String userurl) {
+        this.userurl = userurl;
+    }
+
 
     public String getUrl() {
         return url;
@@ -83,21 +99,6 @@ public class Issue  {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    //public int getId() {
-    //    return id;
-    //}
-
-    //public void setId(int id) {
-    //     this.id = id;
-    //}
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getState() {
