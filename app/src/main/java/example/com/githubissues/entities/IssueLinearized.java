@@ -5,41 +5,36 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 
 @Entity(tableName = "Issues")
 public class IssueLinearized {
 
-
-
     @PrimaryKey
     @ColumnInfo(name = "id")
+    private Integer id;
+    @ColumnInfo(name = "number")
     private Integer number;
-
-
+    @ColumnInfo(name = "url")
     private String url;
-
+    @ColumnInfo(name = "repositoryurl")
     private String repositoryUrl;
-
-
+    @ColumnInfo(name = "title")
     private String title;
-
-
+    @ColumnInfo(name = "username")
     private String username;
-
+    @ColumnInfo(name = "userurl")
     private String userurl;
-
+    @ColumnInfo(name = "state")
     private String state;
-
+    @ColumnInfo(name = "createdat")
     private String createdAt;
-
+    @ColumnInfo(name = "body")
     private String body;
 
 
 
-    public IssueLinearized(String url, String repositoryUrl, Integer number, String title,String state, String createdAt, String body, String username, String userurl) {
+    public IssueLinearized(Integer id,String url, String repositoryUrl, Integer number, String title,String state, String createdAt, String body, String username, String userurl) {
+        this.id = id;
         this.url = url;
         this.repositoryUrl = repositoryUrl;
         this.number = number;
@@ -52,6 +47,13 @@ public class IssueLinearized {
     }
 
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
     public String getUsername() {
         return username;
     }

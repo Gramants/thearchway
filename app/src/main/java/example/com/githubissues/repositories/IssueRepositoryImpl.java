@@ -105,7 +105,7 @@ public class IssueRepositoryImpl implements IssueRepository {
         ArrayList<IssueLinearized> transformed=new ArrayList();
 
         for (Issue issue : issues.body()) {
-            transformed.add(new IssueLinearized(issue.getUrl(),issue.getRepositoryUrl(),issue.getNumber(),issue.getTitle(),issue.getState(),issue.getCreatedAt(),issue.getBody(),issue.getUser().getLogin(),issue.getUser().getUrl()));
+            transformed.add(new IssueLinearized(issue.getId(),issue.getUrl(),issue.getRepositoryUrl(),issue.getNumber(),issue.getTitle(),issue.getState(),issue.getCreatedAt(),issue.getBody(),issue.getUser().getLogin(),issue.getUser().getUrl()));
         }
 
         return transformed;
@@ -115,6 +115,11 @@ public class IssueRepositoryImpl implements IssueRepository {
     public LiveData<IssueLinearized> getIssueFromDb(int id) {
         return App.get().getDB().issueDao().getIssueById(id);
 
+    }
+
+    @Override
+    public void deleteRecordById(int id) {
+        new DeleteIssueByIdAsyncTask(App.get().getDB()).execute(id);
     }
 
 
@@ -149,4 +154,15 @@ public class IssueRepositoryImpl implements IssueRepository {
 
     }
 }
+
+    private class DeleteIssueByIdAsyncTask  extends AsyncTask<Integer, Void, Void> {
+        private IssueDb db;
+        public DeleteIssueByIdAsyncTask(IssueDb userDatabase) {db = userDatabase;}
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            db.issueDao().deleteById(integers[0]);
+            return null;
+        }
+    }
 }

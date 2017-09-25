@@ -42,4 +42,7 @@ public class ListIssuesViewModel extends ViewModel {
         return mApiResponse;
     }
 
+    public void deleteRecordById(Integer id) {
+        mIssueRepository.deleteRecordById(id);
+    }
 }

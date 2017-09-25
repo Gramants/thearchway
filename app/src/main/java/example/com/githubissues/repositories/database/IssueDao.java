@@ -23,6 +23,9 @@ public interface IssueDao {
   @Query("DELETE FROM Issues")
   void deleteAll();
 
+  @Query("DELETE FROM Issues where  id = :id")
+  void deleteById(int id);
+
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insert(IssueLinearized issue);
 

@@ -12,4 +12,6 @@ public interface IssueRepository {
     LiveData<List<IssueLinearized>> getIssues(String owner, String repo, Boolean forceremote);
 
     LiveData<IssueLinearized> getIssueFromDb(int id);
+
+    void deleteRecordById(int id);
 }

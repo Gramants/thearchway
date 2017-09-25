@@ -14,16 +14,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class Issue  {
 
+
     //@PrimaryKey(autoGenerate = true)
     //private int id;
-
+    @SerializedName("id")
+    @Expose
+    private int id;
     @SerializedName("url")
     @Expose
     private String url;
     @SerializedName("repository_url")
     @Expose
     private String repositoryUrl;
-
     @SerializedName("number")
     @Expose
     private Integer number;
@@ -43,7 +45,7 @@ public class Issue  {
     @Expose
     private String body;
 
-    public Issue(String url, String repositoryUrl, Integer number, String title, String state, String createdAt, String body) {
+    public Issue(String url, String repositoryUrl, Integer number, String title, String state, String createdAt, String body,int id) {
         this.url = url;
         this.repositoryUrl = repositoryUrl;
         this.number = number;
@@ -51,6 +53,16 @@ public class Issue  {
         this.state = state;
         this.createdAt = createdAt;
         this.body = body;
+        this.id = id;
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUrl() {

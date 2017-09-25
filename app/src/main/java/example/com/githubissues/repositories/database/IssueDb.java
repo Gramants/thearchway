@@ -4,8 +4,9 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
 import example.com.githubissues.entities.Issue;
+import example.com.githubissues.entities.IssueLinearized;
 
-@Database(entities = Issue.class, version = 1)
+@Database(entities = IssueLinearized.class, version = 1)
 public abstract class IssueDb extends RoomDatabase {
   public abstract IssueDao issueDao();
 }

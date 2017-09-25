@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -126,6 +127,34 @@ public class MainActivity extends LifecycleActivity {
                     }
                 })
         );
+
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+                final int position = viewHolder.getAdapterPosition(); //swiped position
+
+                if (direction == ItemTouchHelper.LEFT) { //swipe left
+
+                    Toast.makeText(getApplicationContext(),"Swipped to left",Toast.LENGTH_SHORT).show();
+
+                }else if(direction == ItemTouchHelper.RIGHT){//swipe right
+
+                    Toast.makeText(getApplicationContext(),"Swipped to right",Toast.LENGTH_SHORT).show();
+
+                }
+
+                mViewModel.deleteRecordById( ((IssueLinearized)  caches.get(position)).getId());
+
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
     }
 
     private void hideSoftKeyboard(Activity activity, View view) {
