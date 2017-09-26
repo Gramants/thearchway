@@ -2,7 +2,7 @@ package example.com.githubissues.repositories.api;
 
 import java.util.List;
 
-import example.com.githubissues.entities.Issue;
+import example.com.githubissues.entities.pojos.Issue;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

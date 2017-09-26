@@ -6,10 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.util.List;
-
-import example.com.githubissues.entities.Issue;
-import example.com.githubissues.entities.IssueLinearized;
+import example.com.githubissues.entities.IssueDataModel;
 import example.com.githubissues.repositories.IssueRepository;
 import example.com.githubissues.repositories.IssueRepositoryImpl;
 
@@ -17,7 +14,7 @@ import example.com.githubissues.repositories.IssueRepositoryImpl;
 
 public class DetailViewModel  extends ViewModel {
 
-    private MediatorLiveData<IssueLinearized> mDbResponse;
+    private MediatorLiveData<IssueDataModel> mDbResponse;
     private IssueRepository mIssueRepository;
 
     public DetailViewModel() {
@@ -26,12 +23,12 @@ public class DetailViewModel  extends ViewModel {
     }
 
     @NonNull
-    public LiveData<IssueLinearized> getdbResponse() {
+    public LiveData<IssueDataModel> getdbResponse() {
         return mDbResponse;
     }
 
 
-    public LiveData<IssueLinearized> loadIssue(int id) {
+    public LiveData<IssueDataModel> loadIssue(int id) {
         Log.e("STEFANO","Issue id: "+String.valueOf(id));
         // https://stackoverflow.com/questions/45679896/android-mediatorlivedata-observer
         mDbResponse.addSource(

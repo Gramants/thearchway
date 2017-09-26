@@ -4,7 +4,7 @@
     <data>
         <variable
             name="issue"
-            type="example.com.githubissues.entities.IssueLinearized" />
+            type="example.com.githubissues.entities.IssueDataModel" />
     </data>
 <LinearLayout
     android:id="@+id/movies_layout"
@@ -23,7 +23,7 @@
             android:paddingRight="16dp"
             android:textStyle="bold"
             android:text="@{issue.title}"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorWhite"
             android:textSize="16sp" />
 
 <LinearLayout
@@ -38,14 +38,14 @@
         android:layout_height="wrap_content"
         android:paddingRight="24dp"
         android:text="@{issue.body}"
-        android:textColor="@color/colorGreyLight" />
+        android:textColor="@color/colorBlack" />
 
     <TextView
         android:id="@+id/creator_name_holder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@{issue.createdAt}"
-        android:textColor="@color/colorGreyLight" />
+        android:textColor="@color/colorBlack" />
     <TextView
         android:id="@+id/creator_name"
         android:layout_width="wrap_content"
@@ -53,7 +53,7 @@
         android:maxLines="3"
         android:paddingRight="16dp"
         android:text="@{issue.repositoryUrl}"
-        android:textColor="@color/colorGreyLight" />
+        android:textColor="@color/colorBlack" />
 </LinearLayout>
 
 

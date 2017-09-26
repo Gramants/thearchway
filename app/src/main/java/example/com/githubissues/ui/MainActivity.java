@@ -26,8 +26,7 @@ import java.util.List;
 import example.com.githubissues.adapters.DataAdapter;
 import example.com.githubissues.R;
 import example.com.githubissues.adapters.RecyclerItemClickListener;
-import example.com.githubissues.entities.Issue;
-import example.com.githubissues.entities.IssueLinearized;
+import example.com.githubissues.entities.IssueDataModel;
 import example.com.githubissues.viewmodels.ListIssuesViewModel;
 
 public class MainActivity extends LifecycleActivity {
@@ -39,7 +38,7 @@ public class MainActivity extends LifecycleActivity {
     private DataAdapter mAdapter;
     private EditText mSearchEditText;
     private ListIssuesViewModel mViewModel;
-    private List<IssueLinearized> caches;
+    private List<IssueDataModel> caches;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +115,7 @@ public class MainActivity extends LifecycleActivity {
 
                         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                         Bundle b = new Bundle();
-                        b.putInt("id", ((IssueLinearized) caches.get(position)).getNumber());
+                        b.putInt("id", ((IssueDataModel) caches.get(position)).getId());
                         intent.putExtras(b);
                         startActivity(intent);
 
@@ -148,7 +147,7 @@ public class MainActivity extends LifecycleActivity {
 
                 }
 
-                mViewModel.deleteRecordById( ((IssueLinearized)  caches.get(position)).getId());
+                mViewModel.deleteRecordById( ((IssueDataModel)  caches.get(position)).getId());
 
             }
         };
@@ -164,7 +163,7 @@ public class MainActivity extends LifecycleActivity {
         imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
     }
 
-    private void handleResponse(List<IssueLinearized> issues) {
+    private void handleResponse(List<IssueDataModel> issues) {
         setProgress(false);
         if (issues != null && issues.size() > 0) {
             mAdapter.addIssues(issues);

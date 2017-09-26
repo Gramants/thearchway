@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import example.com.githubissues.R;
-import example.com.githubissues.entities.Issue;
-import example.com.githubissues.entities.IssueLinearized;
+import example.com.githubissues.entities.IssueDataModel;
 
 /**
  * Created by shahbaz on 14/05/17.
@@ -19,7 +18,7 @@ import example.com.githubissues.entities.IssueLinearized;
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.Holder> {
 
     private final LayoutInflater mInflator;
-    private List<IssueLinearized> mIssueList;
+    private List<IssueDataModel> mIssueList;
 
     public DataAdapter(LayoutInflater inflator) {
         mInflator = inflator;
@@ -46,7 +45,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.Holder> {
         return mIssueList.size();
     }
 
-    public void addIssues(List<IssueLinearized> issues) {
+    public void addIssues(List<IssueDataModel> issues) {
         mIssueList.clear();
         mIssueList.addAll(issues);
         notifyDataSetChanged();

@@ -1,11 +1,5 @@
-package example.com.githubissues.entities;
+package example.com.githubissues.entities.pojos;
 
-
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.databinding.BaseObservable;
-import android.databinding.ObservableField;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

@@ -1,4 +1,4 @@
-package example.com.githubissues.entities;
+package example.com.githubissues.entities.pojos;
 
 /**
  * Created by shahbaz on 14/05/17.

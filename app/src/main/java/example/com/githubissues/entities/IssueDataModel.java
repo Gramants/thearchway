@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 
 @Entity(tableName = "Issues")
-public class IssueLinearized {
+public class IssueDataModel {
 
     @PrimaryKey
     @ColumnInfo(name = "id")
@@ -33,7 +33,7 @@ public class IssueLinearized {
 
 
 
-    public IssueLinearized(Integer id,String url, String repositoryUrl, Integer number, String title,String state, String createdAt, String body, String username, String userurl) {
+    public IssueDataModel(Integer id, String url, String repositoryUrl, Integer number, String title, String state, String createdAt, String body, String username, String userurl) {
         this.id = id;
         this.url = url;
         this.repositoryUrl = repositoryUrl;
