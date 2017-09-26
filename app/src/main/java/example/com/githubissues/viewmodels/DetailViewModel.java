@@ -6,6 +6,8 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import javax.inject.Inject;
+
 import example.com.githubissues.entities.IssueDataModel;
 import example.com.githubissues.repositories.IssueRepository;
 import example.com.githubissues.repositories.IssueRepositoryImpl;
@@ -15,11 +17,13 @@ import example.com.githubissues.repositories.IssueRepositoryImpl;
 public class DetailViewModel  extends ViewModel {
 
     private MediatorLiveData<IssueDataModel> mDbResponse;
-    private IssueRepository mIssueRepository;
+    @Inject
+    IssueRepository mIssueRepository;
+
 
     public DetailViewModel() {
         mDbResponse = new MediatorLiveData<>();
-        mIssueRepository = new IssueRepositoryImpl();
+
     }
 
     @NonNull

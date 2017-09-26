@@ -7,11 +7,15 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import example.com.githubissues.App;
 import example.com.githubissues.entities.IssueDataModel;
 import example.com.githubissues.entities.pojos.Issue;
 import example.com.githubissues.repositories.api.GithubApiService;
 import example.com.githubissues.repositories.database.DbAsyncOp;
+import example.com.githubissues.repositories.database.IssueDao;
+import example.com.githubissues.repositories.database.IssueDb;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,16 +26,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class IssueRepositoryImpl implements IssueRepository {
 
-    public static final String BASE_URL = "https://api.github.com/";
+    private IssueDao issueDao;
     private GithubApiService mApiService;
-
-    public IssueRepositoryImpl() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(BASE_URL)
-                .build();
-        mApiService = retrofit.create(GithubApiService.class);
+    private IssueDb mIssuedb;
+    @Inject
+    public IssueRepositoryImpl(IssueDao issueDao, IssueDb mIssuedb, GithubApiService mApiService) {
+        this.issueDao = issueDao;
+        this.mApiService = mApiService;
+        this.mIssuedb = mIssuedb;
     }
+
 
 
 
@@ -65,7 +69,7 @@ public class IssueRepositoryImpl implements IssueRepository {
         {
             // pick from the DB
             Log.e("STEFANO","carico da tabella locale!");
-            return App.get().getDB().issueDao().getAllIssue();
+            return issueDao.getAllIssue();
 
         }
 
@@ -83,18 +87,18 @@ public class IssueRepositoryImpl implements IssueRepository {
 
     @Override
     public LiveData<IssueDataModel> getIssueFromDb(int id) {
-        return App.get().getDB().issueDao().getIssueById(id);
+        return issueDao.getIssueById(id);
 
     }
 
     @Override
     public void deleteRecordById(int id) {
-        new DbAsyncOp.DeleteIssueByIdAsyncTask(App.get().getDB()).execute(id);
+        new DbAsyncOp.DeleteIssueByIdAsyncTask(mIssuedb).execute(id);
     }
 
 
     private void deleteTableAndSaveDataToLocal(ArrayList<IssueDataModel> issues) {
-        new DbAsyncOp.AddIssueAsyncTask(App.get().getDB()).execute(issues);
+        new DbAsyncOp.AddIssueAsyncTask(mIssuedb).execute(issues);
     }
 
 

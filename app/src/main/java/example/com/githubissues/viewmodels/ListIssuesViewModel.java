@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import example.com.githubissues.entities.IssueDataModel;
 import example.com.githubissues.repositories.IssueRepository;
 import example.com.githubissues.repositories.IssueRepositoryImpl;
@@ -15,11 +17,12 @@ import example.com.githubissues.repositories.IssueRepositoryImpl;
 public class ListIssuesViewModel extends ViewModel {
 
     private MediatorLiveData<List<IssueDataModel>> mApiResponse;
-    private IssueRepository mIssueRepository;
+
+    @Inject
+    IssueRepository mIssueRepository;
 
     public ListIssuesViewModel() {
         mApiResponse = new MediatorLiveData<>();
-        mIssueRepository = new IssueRepositoryImpl();
     }
 
     @NonNull
