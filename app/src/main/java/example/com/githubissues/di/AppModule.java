@@ -14,7 +14,7 @@ import example.com.githubissues.App;
 public class AppModule {
     private Context context;
 
-    public AppModule(Application context) {
+    public AppModule(Context context) {
         this.context = context;
     }
 

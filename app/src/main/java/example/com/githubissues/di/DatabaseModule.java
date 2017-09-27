@@ -16,7 +16,7 @@ import example.com.githubissues.repositories.database.IssueDb;
  * Created by Stefano on 26/09/2017.
  */
 @Module
-class DatabaseModule {
+public class DatabaseModule {
 
     private static final String DATABASE = "database_name";
 
