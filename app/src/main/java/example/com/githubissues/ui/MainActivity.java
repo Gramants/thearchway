@@ -207,10 +207,14 @@ public class MainActivity extends LifecycleActivity {
             }
         });
 
-        mSearchEditText.setText(mViewModel.getSavedSearch());
+        mViewModel.getSearchString().observe(this, searchString -> {
+            mSearchEditText.setText(searchString);
+        });
 
 
     }
+
+
 
 
 

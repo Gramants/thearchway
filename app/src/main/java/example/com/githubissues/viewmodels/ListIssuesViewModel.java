@@ -15,6 +15,7 @@ import example.com.githubissues.App;
 import example.com.githubissues.entities.IssueDataModel;
 import example.com.githubissues.repositories.IssueRepository;
 import example.com.githubissues.repositories.preferences.PersistentStorageProxy;
+import io.reactivex.Observable;
 
 
 public class ListIssuesViewModel extends AndroidViewModel {
@@ -22,6 +23,7 @@ public class ListIssuesViewModel extends AndroidViewModel {
     //https://stackoverflow.com/questions/44270577/android-lifecycle-library-viewmodel-using-dagger-2
 
     private MediatorLiveData<List<IssueDataModel>> mApiResponse;
+    final MutableLiveData<String> livedatasavedstring = new MutableLiveData<>();
 
     @Inject
     IssueRepository mIssueRepository;
@@ -64,8 +66,9 @@ public class ListIssuesViewModel extends AndroidViewModel {
         mPersistentStorageProxy.setSearchString(searchstring);
     }
 
-    public String getSavedSearch() {
-        return mPersistentStorageProxy.getSearchString();
+    public LiveData<String> getSearchString() {
+        livedatasavedstring.setValue( mPersistentStorageProxy.getSearchString());
+        return livedatasavedstring;
     }
 
 }
