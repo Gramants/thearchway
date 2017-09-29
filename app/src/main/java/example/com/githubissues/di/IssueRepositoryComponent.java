@@ -9,10 +9,9 @@ import example.com.githubissues.viewmodels.DetailViewModel;
 import example.com.githubissues.viewmodels.ListIssuesViewModel;
 
 @Singleton
-    @Component(modules = { IssueRepositoryModule.class, AppModule.class, ApiServiceModule.class, DatabaseModule.class})
+    @Component(modules = { IssueRepositoryModule.class, AppModule.class, ApiServiceModule.class, DatabaseModule.class,PreferencesModule.class})
     public interface IssueRepositoryComponent {
         IssueRepositoryImpl provideIssueRepository();
-
         void inject(DetailViewModel detailViewModel);
         void inject(ListIssuesViewModel listIssuesViewModel);
 }

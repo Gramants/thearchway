@@ -11,6 +11,7 @@ import example.com.githubissues.di.DaggerIssueRepositoryComponent;
 import example.com.githubissues.di.DatabaseModule;
 import example.com.githubissues.di.IssueRepositoryComponent;
 import example.com.githubissues.di.IssueRepositoryModule;
+import example.com.githubissues.di.PreferencesModule;
 import example.com.githubissues.repositories.database.IssueDao;
 import example.com.githubissues.repositories.database.IssueDb;
 
@@ -27,6 +28,7 @@ public class App extends Application {
     private void initializeDependencies() {
         repositoryComponent = DaggerIssueRepositoryComponent.builder()
                 .appModule(new AppModule(this))
+                .preferencesModule(new PreferencesModule(this))
                 .apiServiceModule(new ApiServiceModule())
                 .databaseModule(new DatabaseModule())
                 .issueRepositoryModule(new IssueRepositoryModule())

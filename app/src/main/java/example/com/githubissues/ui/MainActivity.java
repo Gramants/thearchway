@@ -56,6 +56,7 @@ public class MainActivity extends LifecycleActivity {
                         hideSoftKeyboard(MainActivity.this, v);
                         setProgress(true);
                         mViewModel.loadIssues(query[0], query[1],true);
+                        mViewModel.saveSearchString(query[0]+"/"+query[1]);
                     } else {
                         handleError("Error wrong format of input. Required format owner/repository_name");
                     }
@@ -173,7 +174,7 @@ public class MainActivity extends LifecycleActivity {
             mAdapter.clearIssues();
             Toast.makeText(
                     this,
-                    "No issues found for the searched repository.",
+                    "No data!",
                     Toast.LENGTH_SHORT
             ).show();
         }
@@ -205,7 +206,13 @@ public class MainActivity extends LifecycleActivity {
 
             }
         });
+
+        mSearchEditText.setText(mViewModel.getSavedSearch());
+
+
     }
+
+
 
 }
 

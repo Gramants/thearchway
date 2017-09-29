@@ -4,7 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import java.util.List;
@@ -12,15 +12,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import example.com.githubissues.App;
-import example.com.githubissues.di.ApiServiceModule;
-import example.com.githubissues.di.AppModule;
-import example.com.githubissues.di.DaggerIssueRepositoryComponent;
-import example.com.githubissues.di.DatabaseModule;
-import example.com.githubissues.di.IssueRepositoryComponent;
-import example.com.githubissues.di.IssueRepositoryModule;
 import example.com.githubissues.entities.IssueDataModel;
 import example.com.githubissues.repositories.IssueRepository;
-import example.com.githubissues.repositories.IssueRepositoryImpl;
+import example.com.githubissues.repositories.preferences.PersistentStorageProxy;
 
 
 public class ListIssuesViewModel extends AndroidViewModel {
@@ -31,6 +25,9 @@ public class ListIssuesViewModel extends AndroidViewModel {
 
     @Inject
     IssueRepository mIssueRepository;
+
+    @Inject
+    PersistentStorageProxy mPersistentStorageProxy;
 
     public ListIssuesViewModel(Application application) {
         super(application);
@@ -62,4 +59,13 @@ public class ListIssuesViewModel extends AndroidViewModel {
     public void deleteRecordById(Integer id) {
         mIssueRepository.deleteRecordById(id);
     }
+
+    public void saveSearchString(String searchstring) {
+        mPersistentStorageProxy.setSearchString(searchstring);
+    }
+
+    public String getSavedSearch() {
+        return mPersistentStorageProxy.getSearchString();
+    }
+
 }

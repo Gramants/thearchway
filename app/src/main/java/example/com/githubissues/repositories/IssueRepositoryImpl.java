@@ -22,6 +22,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static example.com.githubissues.entities.translator.DataTranslator.IssueTranslator;
 
 
 public class IssueRepositoryImpl implements IssueRepository {
@@ -51,7 +52,7 @@ public class IssueRepositoryImpl implements IssueRepository {
             public void onResponse(Call<List<Issue>> call, Response<List<Issue>> response) {
 
                 ArrayList<IssueDataModel> transformed=new ArrayList();
-                transformed=LinearizeIssue(response);
+                transformed=IssueTranslator(response);
                 deleteTableAndSaveDataToLocal(transformed);
                 liveData.setValue(transformed);
             }
@@ -75,15 +76,7 @@ public class IssueRepositoryImpl implements IssueRepository {
 
     }
 
-    private ArrayList<IssueDataModel> LinearizeIssue(Response<List<Issue>> issues) {
-        ArrayList<IssueDataModel> transformed=new ArrayList();
 
-        for (Issue issue : issues.body()) {
-            transformed.add(new IssueDataModel(issue.getId(),issue.getUrl(),issue.getRepositoryUrl(),issue.getNumber(),issue.getTitle(),issue.getState(),issue.getCreatedAt(),issue.getBody(),issue.getUser().getLogin(),issue.getUser().getUrl()));
-        }
-
-        return transformed;
-    }
 
     @Override
     public LiveData<IssueDataModel> getIssueFromDb(int id) {

@@ -5,8 +5,10 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import example.com.githubissues.Config;
 
-@Entity(tableName = "Issues")
+
+@Entity(tableName = Config.QUESTION_TABLE_NAME)
 public class IssueDataModel {
 
     @PrimaryKey
