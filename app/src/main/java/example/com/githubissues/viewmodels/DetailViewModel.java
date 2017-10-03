@@ -42,7 +42,6 @@ public class DetailViewModel extends AndroidViewModel {
 
 
     public LiveData<IssueDataModel> loadIssue(int id) {
-        Log.e("STEFANO", "Issue id: " + String.valueOf(id));
         // https://stackoverflow.com/questions/45679896/android-mediatorlivedata-observer
         mDbResponse.addSource(
                 mIssueRepository.getIssueFromDb(id),
