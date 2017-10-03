@@ -69,7 +69,6 @@ public class IssueRepositoryImpl implements IssueRepository {
         else
         {
             // pick from the DB
-            Log.e("STEFANO","carico da tabella locale!");
             return issueDao.getAllIssue();
 
         }
