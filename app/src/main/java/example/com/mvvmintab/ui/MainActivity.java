@@ -27,7 +27,7 @@ import example.com.mvvmintab.adapters.DataAdapter;
 import example.com.mvvmintab.R;
 import example.com.mvvmintab.adapters.RecyclerItemClickListener;
 import example.com.mvvmintab.entities.IssueDataModel;
-import example.com.mvvmintab.viewmodels.ListIssuesViewModel;
+import example.com.mvvmintab.viewmodels.RootViewModel;
 
 public class MainActivity extends LifecycleActivity {
 
@@ -37,14 +37,14 @@ public class MainActivity extends LifecycleActivity {
     private ProgressDialog mDialog;
     private DataAdapter mAdapter;
     private EditText mSearchEditText;
-    private ListIssuesViewModel mViewModel;
+    private RootViewModel mViewModel;
     private List<IssueDataModel> caches;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mViewModel = ViewModelProviders.of(this).get(ListIssuesViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(RootViewModel.class);
         setupView();
 
         mSearchEditText.setOnEditorActionListener((TextView v, int actionId, KeyEvent event) -> {
@@ -56,6 +56,7 @@ public class MainActivity extends LifecycleActivity {
                         hideSoftKeyboard(MainActivity.this, v);
                         setProgress(true);
                         mViewModel.loadIssues(query[0], query[1],true);
+                        mViewModel.loadContributor(query[0], query[1],true);
                         mViewModel.saveSearchString(query[0]+"/"+query[1]);
                     } else {
                         handleError("Error wrong format of input. Required format owner/repository_name");
@@ -69,7 +70,7 @@ public class MainActivity extends LifecycleActivity {
         });
 
         // Handle changes emitted by LiveData
-        mViewModel.getApiResponse().observe(this, apiResponse -> {
+        mViewModel.getApiIssueResponse().observe(this, apiResponse -> {
             if (apiResponse== null) {
                 handleError("No data to show!");
             } else {
@@ -199,7 +200,7 @@ public class MainActivity extends LifecycleActivity {
     protected void onStart() {
         super.onStart();
         mViewModel.loadIssues("fromdb", "fromdb",false);
-        mViewModel.getApiResponse().observe(this, apiResponse -> {
+        mViewModel.getApiIssueResponse().observe(this, apiResponse -> {
             if (apiResponse != null) {
                 this.caches=apiResponse;
                 handleResponse(apiResponse);

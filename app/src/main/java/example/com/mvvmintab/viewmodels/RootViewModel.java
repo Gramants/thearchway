@@ -12,51 +12,67 @@ import java.util.List;
 import javax.inject.Inject;
 
 import example.com.mvvmintab.App;
+import example.com.mvvmintab.entities.ContributorDataModel;
 import example.com.mvvmintab.entities.IssueDataModel;
+import example.com.mvvmintab.repositories.ContributorRepository;
 import example.com.mvvmintab.repositories.IssueRepository;
 import example.com.mvvmintab.repositories.preferences.PersistentStorageProxy;
 
 
-public class ListIssuesViewModel extends AndroidViewModel {
+public class RootViewModel extends AndroidViewModel {
 
     //https://stackoverflow.com/questions/44270577/android-lifecycle-library-viewmodel-using-dagger-2
 
-    private MediatorLiveData<List<IssueDataModel>> mApiResponse;
+    private MediatorLiveData<List<IssueDataModel>> mApiIssueResponse;
+    private MediatorLiveData<List<ContributorDataModel>> mApiContributorResponse;
+
     final MutableLiveData<String> livedatasavedstring = new MutableLiveData<>();
 
     @Inject
     IssueRepository mIssueRepository;
 
+    @Inject
+    ContributorRepository mContributorRepository;
 
     @Inject
     PersistentStorageProxy mPersistentStorageProxy;
 
-    public ListIssuesViewModel(Application application) {
+
+
+    public RootViewModel(Application application) {
         super(application);
-        mApiResponse = new MediatorLiveData<>();
+        mApiIssueResponse = new MediatorLiveData<>();
+        mApiContributorResponse = new MediatorLiveData<>();
         ((App) application).getAppRepositoryComponent().inject(this);
 
     }
 
 
     @NonNull
-    public LiveData<List<IssueDataModel>> getApiResponse() {
-        return mApiResponse;
+    public LiveData<List<IssueDataModel>> getApiIssueResponse() {
+        return mApiIssueResponse;
     }
+    @NonNull
+    public LiveData<List<ContributorDataModel>> getApiContributorResponse() {return mApiContributorResponse;}
 
 
     public LiveData<List<IssueDataModel>> loadIssues(@NonNull String user, String repo, Boolean forceremote) {
-        // https://stackoverflow.com/questions/45679896/android-mediatorlivedata-observer
-        mApiResponse.addSource(
+        mApiIssueResponse.addSource(
                 mIssueRepository.getIssues(user, repo, forceremote),
-                apiResponse -> mApiResponse.setValue(apiResponse)
+                apiIssueResponse -> mApiIssueResponse.setValue(apiIssueResponse)
         );
-
-
-        //https://github.com/florent37/NewAndroidArchitecture-Component-Github
-        // databinding
-        return mApiResponse;
+        return mApiIssueResponse;
     }
+
+    public LiveData<List<ContributorDataModel>> loadContributor(@NonNull String user, String repo, Boolean forceremote) {
+        mApiIssueResponse.addSource(
+                mContributorRepository.getContributors(user, repo, forceremote),
+                apiContributorResponse -> mApiContributorResponse.setValue(apiContributorResponse)
+        );
+        return mApiContributorResponse;
+    }
+
+
 
     public void deleteRecordById(Integer id) {
         mIssueRepository.deleteRecordById(id);
