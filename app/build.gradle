@@ -39,9 +39,13 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs'
     })
-    compile "com.android.support:appcompat-v7:$support_lib_version"
+
     testCompile 'junit:junit:4.12'
+
+    compile "com.android.support:appcompat-v7:$support_lib_version"
+    compile "com.android.support:design:$support_lib_version"
     compile "com.android.support:recyclerview-v7:$support_lib_version"
+
 
     compile "android.arch.lifecycle:runtime:$arch_version"
     compile "android.arch.lifecycle:extensions:$arch_version"

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="example.com.mvvmarchcomp"
+<manifest package="example.com.mvvmintab"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:name="example.com.mvvmarchcomp.App"
+        android:name="example.com.mvvmintab.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="example.com.mvvmarchcomp.ui.MainActivity"
+            android:name="example.com.mvvmintab.ui.MainActivity"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="example.com.mvvmarchcomp.ui.DetailActivity"></activity>
+        <activity android:name="example.com.mvvmintab.ui.DetailActivity"></activity>
     </application>
 
 </manifest>

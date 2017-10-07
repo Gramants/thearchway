@@ -4,7 +4,7 @@
     <data>
         <variable
             name="issue"
-            type="example.com.mvvmarchcomp.entities.IssueDataModel" />
+            type="example.com.mvvmintab.entities.IssueDataModel" />
     </data>
 <LinearLayout
     android:id="@+id/movies_layout"
