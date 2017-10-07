@@ -1,5 +1,10 @@
 package example.com.mvvmintab.ui;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.arch.lifecycle.LifecycleActivity;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,37 +13,45 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
 import example.com.mvvmintab.R;
+import example.com.mvvmintab.viewmodels.RootViewModel;
 
-public class TabAnimationActivity extends AppCompatActivity {
-/*
+public class ViewPagerActivity extends LifecycleActivity {
+
+    private RootViewModel mViewModel;
+    private SearchView searchview;
+    private ProgressDialog mDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tab_animation);
-
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.tabanim_toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.activity_tabbed);
+        mViewModel = ViewModelProviders.of(this).get(RootViewModel.class);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setActionBar(toolbar);
+        if (getActionBar() != null) getActionBar().setDisplayHomeAsUpEnabled(true);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
         setupViewPager(viewPager);
+
+        searchview = (SearchView) findViewById(R.id.searchstring); // inititate a search view
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabanim_tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -72,6 +85,47 @@ public class TabAnimationActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+
+// perform set on query text listener event
+        searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String repo) {
+
+                if (repo.length() > 0) {
+                    String[] query = repo.split("/");
+                    if (query.length == 2) {
+                        setProgress(true);
+                        mViewModel.loadIssues(query[0], query[1],true);
+                        mViewModel.loadContributor(query[0], query[1],true);
+                        mViewModel.saveSearchString(query[0]+"/"+query[1]);
+                    } else {
+                        handleError("Error wrong format of input. Required format owner/repository_name");
+                    }
+                } else {
+                    handleError("IssueRepository name empty. Required format owner/repository_name");
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+// do something when text changes
+                return false;
+            }
+        });
+
+
+
+        mDialog = new ProgressDialog(ViewPagerActivity.this);
+        mDialog.setIndeterminate(true);
+        mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mDialog.setTitle(getString(R.string.progress_title));
+        mDialog.setMessage(getString(R.string.progress_body));
+        mDialog.setCancelable(false);
+        mDialog.setCanceledOnTouchOutside(false);
     }
 
     void showToast(String msg) {
@@ -81,8 +135,7 @@ public class TabAnimationActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFrag(new DummyFragment(
-                ContextCompat.getColor(this, R.color.colorAccent)), "two");
+        adapter.addFrag(new DummyFragment(ContextCompat.getColor(this, R.color.colorAccent)), "two");
         adapter.addFrag(new DummyFragment(
                 ContextCompat.getColor(this, R.color.colorGrey)), "three");
         adapter.addFrag(new DummyFragment(
@@ -137,43 +190,36 @@ public class TabAnimationActivity extends AppCompatActivity {
 
 
 
-
-    public static class DummyFragment extends Fragment {
-        int color;
-        SimpleRecyclerAdapter adapter;
-
-        public DummyFragment() {
-        }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mViewModel.loadIssues("fromdb", "fromdb",false);
 
 
-        public DummyFragment(int color) {
-            this.color = color;
-        }
+        mViewModel.getSearchString().observe(this, searchString -> {
+            searchview.setQuery(new String(searchString),false);
+        });
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.dummy_fragment, container, false);
 
-            final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.dummyfrag_bg);
-            frameLayout.setBackgroundColor(color);
+    }
 
-            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.dummyfrag_scrollableview);
 
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getBaseContext());
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.setHasFixedSize(true);
+    private void hideSoftKeyboard(Activity activity, View view) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(
+                Context.INPUT_METHOD_SERVICE
+        );
+        imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
+    }
 
-            List<String> list = new ArrayList<String>();
-            for (int i = 0; i < VersionModel.data.length; i++) {
-                list.add(VersionModel.data[i]);
-            }
-
-            adapter = new SimpleRecyclerAdapter(list);
-            recyclerView.setAdapter(adapter);
-
-            return view;
+    public void setProgress(boolean flag) {
+        if (flag) {
+            mDialog.show();
+        } else {
+            mDialog.dismiss();
         }
     }
-*/
-
+    private void handleError(String msg) {
+        setProgress(false);
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
 }
