@@ -18,8 +18,8 @@ public class DataTranslator {
     public static ArrayList<IssueDataModel> IssueTranslator(Response<List<Issue>> response) {
         ArrayList<IssueDataModel> transformed = new ArrayList();
         if (response.isSuccessful()) {
-            for (Issue issue : response.body()) {
-                transformed.add(new IssueDataModel(issue.getId(), issue.getUrl(), issue.getRepositoryUrl(), issue.getNumber(), issue.getTitle(), issue.getState(), issue.getCreatedAt(), issue.getBody(), issue.getUser().getLogin(), issue.getUser().getUrl(), ""));
+            for (Issue listitem : response.body()) {
+                transformed.add(new IssueDataModel(listitem.getId(), listitem.getUrl(), listitem.getRepositoryUrl(), listitem.getNumber(), listitem.getTitle(), listitem.getState(), listitem.getCreatedAt(), listitem.getBody(), listitem.getUser().getLogin(), listitem.getUser().getUrl(), ""));
             }
         } else {
             transformed.add(new IssueDataModel(-1, "", "", 0, "", "", "", "", "", "", response.message()));
@@ -28,11 +28,17 @@ public class DataTranslator {
         return transformed;
     }
 
-    public static ArrayList<ContributorDataModel> ContributorTranslator(Response<List<Contributor>> contributors) {
+    public static ArrayList<ContributorDataModel> ContributorTranslator(Response<List<Contributor>> response) {
+
         ArrayList<ContributorDataModel> transformed = new ArrayList();
-        for (Contributor contributor : contributors.body()) {
-            transformed.add(new ContributorDataModel(contributor.getId(), contributor.getLogin(), contributor.getHtml_url()));
+        if (response.isSuccessful()) {
+            for (Contributor listitem : response.body()) {
+                transformed.add(new ContributorDataModel(listitem.getId(), listitem.getLogin(), listitem.getHtml_url(), ""));
+            }
+        } else {
+            transformed.add(new ContributorDataModel(-1, "", "", response.message()));
         }
+
         return transformed;
     }
 

@@ -22,6 +22,10 @@ public class ContributorDataModel {
     private String login;
     @ColumnInfo(name = "html_url")
     private String html_url;
+    @ColumnInfo(name = "error")
+    private String error;
+
+
 
     public int getId() {
         return id;
@@ -47,10 +51,19 @@ public class ContributorDataModel {
         this.html_url = html_url;
     }
 
-    public ContributorDataModel(int id, String login, String html_url) {
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public ContributorDataModel(int id, String login, String html_url,String error) {
 
         this.id = id;
         this.login = login;
         this.html_url = html_url;
+        this.error=error;
     }
 }

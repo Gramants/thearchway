@@ -24,13 +24,13 @@ import example.com.mvvmintab.viewmodels.RootViewModel;
 
 
 @SuppressLint("ValidFragment")
-public class DummyFragment extends LifecycleFragment {
+public class IssueListFragment extends LifecycleFragment {
     int color;
     private RootViewModel mRootViewModel;
     private List<IssueDataModel> caches;
 
     @SuppressLint("ValidFragment")
-    public DummyFragment(int color) {
+    public IssueListFragment(int color) {
         this.color = color;
     }
 
@@ -56,6 +56,7 @@ public class DummyFragment extends LifecycleFragment {
                 handleResponse(apiResponse);
                 }
             }
+            mRootViewModel.hideDialog();
         });
 
     }
@@ -63,7 +64,7 @@ public class DummyFragment extends LifecycleFragment {
 
     private void handleResponse(List<IssueDataModel> issues) {
 
-
+        Log.e("STEFANO","passo");
         if (!((IssueDataModel)issues.get(0)).getError().isEmpty()) {
 
             Toast.makeText(
@@ -76,14 +77,14 @@ public class DummyFragment extends LifecycleFragment {
         } else {
             Toast.makeText(
                     getContext(),
-                   "trovati!",
+                   "Issue trovati:"+String.valueOf(issues.size()),
                     Toast.LENGTH_SHORT
             ).show();
 
 
         }
 
-        mRootViewModel.hideDialog();
+
     }
 
 

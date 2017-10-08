@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.LifecycleActivity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,14 +13,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -99,7 +94,7 @@ public class ViewPagerActivity extends LifecycleActivity {
                     if (query.length == 2) {
                         setProgress(true);
                         mViewModel.loadIssues(query[0], query[1],true);
-                        //mViewModel.loadContributor(query[0], query[1],true);
+                        mViewModel.loadContributor(query[0], query[1],true);
                         mViewModel.saveSearchString(query[0]+"/"+query[1]);
                     } else {
                         handleError("Error wrong format of input. Required format owner/repository_name");
@@ -134,8 +129,8 @@ public class ViewPagerActivity extends LifecycleActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFrag(new DummyFragment(ContextCompat.getColor(this, R.color.colorAccent)), "uno");
-        adapter.addFrag(new DummyFragment2(ContextCompat.getColor(this, R.color.colorGrey)), "due");
+        adapter.addFrag(new IssueListFragment(ContextCompat.getColor(this, R.color.colorAccent)), "Issues");
+        adapter.addFrag(new ContributorListFragment(ContextCompat.getColor(this, R.color.colorGrey)), "Contributors");
         adapter.addFrag(new DummyFragment2(ContextCompat.getColor(this, R.color.colorPrimary)), "tre");
         viewPager.setAdapter(adapter);
     }
@@ -191,6 +186,7 @@ public class ViewPagerActivity extends LifecycleActivity {
     protected void onStart() {
         super.onStart();
         mViewModel.loadIssues("fromdb", "fromdb",false);
+        mViewModel.loadContributor("fromdb", "fromdb",false);
 
         mViewModel.getSearchString().observe(this, searchString -> {
              searchview.setIconified(false);

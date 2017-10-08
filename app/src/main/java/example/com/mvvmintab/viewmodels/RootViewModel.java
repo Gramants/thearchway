@@ -73,10 +73,10 @@ public class RootViewModel extends AndroidViewModel {
     }
 
 
-
     public void deleteRecordById(Integer id) {
         mIssueRepository.deleteRecordById(id);
     }
+
 
     public void saveSearchString(String searchstring) {
         mPersistentStorageProxy.setSearchString(searchstring);
