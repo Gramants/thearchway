@@ -39,6 +39,8 @@ public class Issue  {
     @Expose
     private String body;
 
+    private Boolean error;
+
     public Issue(String url, String repositoryUrl, Integer number, String title, String state, String createdAt, String body,int id) {
         this.url = url;
         this.repositoryUrl = repositoryUrl;
@@ -48,8 +50,12 @@ public class Issue  {
         this.createdAt = createdAt;
         this.body = body;
         this.id = id;
+        this.error=false;
     }
 
+    public Issue(Boolean error){
+        this.error=error;
+    }
 
     public int getId() {
         return id;
@@ -128,6 +134,10 @@ public class Issue  {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public Boolean getError() {
+        return error;
     }
 
 }

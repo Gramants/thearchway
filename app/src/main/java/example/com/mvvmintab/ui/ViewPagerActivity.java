@@ -99,7 +99,7 @@ public class ViewPagerActivity extends LifecycleActivity {
                     if (query.length == 2) {
                         setProgress(true);
                         mViewModel.loadIssues(query[0], query[1],true);
-                        mViewModel.loadContributor(query[0], query[1],true);
+                        //mViewModel.loadContributor(query[0], query[1],true);
                         mViewModel.saveSearchString(query[0]+"/"+query[1]);
                     } else {
                         handleError("Error wrong format of input. Required format owner/repository_name");
@@ -118,7 +118,6 @@ public class ViewPagerActivity extends LifecycleActivity {
         });
 
 
-
         mDialog = new ProgressDialog(ViewPagerActivity.this);
         mDialog.setIndeterminate(true);
         mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -135,11 +134,9 @@ public class ViewPagerActivity extends LifecycleActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFrag(new DummyFragment(ContextCompat.getColor(this, R.color.colorAccent)), "two");
-        adapter.addFrag(new DummyFragment(
-                ContextCompat.getColor(this, R.color.colorGrey)), "three");
-        adapter.addFrag(new DummyFragment(
-                ContextCompat.getColor(this, R.color.colorPrimary)), "four");
+        adapter.addFrag(new DummyFragment(ContextCompat.getColor(this, R.color.colorAccent)), "uno");
+        adapter.addFrag(new DummyFragment2(ContextCompat.getColor(this, R.color.colorGrey)), "due");
+        adapter.addFrag(new DummyFragment2(ContextCompat.getColor(this, R.color.colorPrimary)), "tre");
         viewPager.setAdapter(adapter);
     }
 
@@ -195,10 +192,11 @@ public class ViewPagerActivity extends LifecycleActivity {
         super.onStart();
         mViewModel.loadIssues("fromdb", "fromdb",false);
 
-
         mViewModel.getSearchString().observe(this, searchString -> {
-            searchview.setQuery(new String(searchString),false);
-        });
+             searchview.setIconified(false);
+             searchview.setQuery(new String(searchString),false);
+
+         });
 
 
     }

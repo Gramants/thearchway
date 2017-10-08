@@ -43,10 +43,9 @@ public class IssueRepositoryImpl implements IssueRepository {
         call.enqueue(new Callback<List<Issue>>() {
             @Override
             public void onResponse(Call<List<Issue>> call, Response<List<Issue>> response) {
-
-                ArrayList<IssueDataModel> transformed=new ArrayList();
-                transformed=IssueTranslator(response);
-                deleteTableAndSaveDataToLocal(transformed);
+                ArrayList<IssueDataModel> transformed=IssueTranslator(response);
+                if (response.isSuccessful())
+                {deleteTableAndSaveDataToLocal(transformed);}
                 liveData.setValue(transformed);
             }
 
