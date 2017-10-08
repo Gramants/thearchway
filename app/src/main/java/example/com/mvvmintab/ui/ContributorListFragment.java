@@ -4,6 +4,10 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,8 @@ import android.widget.Toast;
 import java.util.List;
 
 import example.com.mvvmintab.R;
+import example.com.mvvmintab.adapters.ContributorDataAdapter;
+import example.com.mvvmintab.adapters.IssueDataAdapter;
 import example.com.mvvmintab.entities.ContributorDataModel;
 import example.com.mvvmintab.entities.IssueDataModel;
 import example.com.mvvmintab.viewmodels.RootViewModel;
@@ -22,7 +28,8 @@ import example.com.mvvmintab.viewmodels.RootViewModel;
 public class ContributorListFragment extends LifecycleFragment {
     int color;
     private RootViewModel mRootViewModel;
-    private List<IssueDataModel> caches;
+    private RecyclerView mRecyclerView;
+    private ContributorDataAdapter mAdapter;
 
     @SuppressLint("ValidFragment")
     public ContributorListFragment(int color) {
@@ -34,7 +41,7 @@ public class ContributorListFragment extends LifecycleFragment {
         View view = inflater.inflate(R.layout.dummy_fragment, container, false);
         final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.dummyfrag_bg);
         frameLayout.setBackgroundColor(color);
-
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRootViewModel = ViewModelProviders.of(getActivity()).get(RootViewModel.class);
 
         return view;
@@ -54,6 +61,19 @@ public class ContributorListFragment extends LifecycleFragment {
             mRootViewModel.hideDialog();
         });
 
+
+        mRecyclerView.setRecycledViewPool(new RecyclerView.RecycledViewPool());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(
+                getContext(), LinearLayoutManager.VERTICAL, false)
+        );
+        mRecyclerView.hasFixedSize();
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(
+                mRecyclerView.getContext(), LinearLayoutManager.VERTICAL
+        );
+        mRecyclerView.addItemDecoration(mDividerItemDecoration);
+        mAdapter = new ContributorDataAdapter(getLayoutInflater());
+        mRecyclerView.setAdapter(mAdapter);
     }
 
 
@@ -62,22 +82,12 @@ public class ContributorListFragment extends LifecycleFragment {
 
         if (!((ContributorDataModel)contributors.get(0)).getError().isEmpty()) {
 
-            Toast.makeText(
-                    getContext(),
-                    ((ContributorDataModel)contributors.get(0)).getError(),
-                    Toast.LENGTH_SHORT
-            ).show();
-
+            mAdapter.clearContributors();
 
         } else {
-            Toast.makeText(
-                    getContext(),
-                    "Contributor trovati:"+String.valueOf(contributors.size()),
-                    Toast.LENGTH_SHORT
-            ).show();
-
-
+            mAdapter.addContributors(contributors);
         }
+
 
     }
 

@@ -15,12 +15,12 @@ import example.com.mvvmintab.entities.IssueDataModel;
 /**
  * Created by shahbaz on 14/05/17.
  */
-public class DataAdapter extends RecyclerView.Adapter<DataAdapter.Holder> {
+public class IssueDataAdapter extends RecyclerView.Adapter<IssueDataAdapter.Holder> {
 
     private final LayoutInflater mInflator;
     private List<IssueDataModel> mIssueList;
 
-    public DataAdapter(LayoutInflater inflator) {
+    public IssueDataAdapter(LayoutInflater inflator) {
         mInflator = inflator;
         mIssueList = new ArrayList<>();
     }

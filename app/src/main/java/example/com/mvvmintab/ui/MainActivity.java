@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import example.com.mvvmintab.adapters.DataAdapter;
+import example.com.mvvmintab.adapters.IssueDataAdapter;
 import example.com.mvvmintab.R;
 import example.com.mvvmintab.adapters.RecyclerItemClickListener;
 import example.com.mvvmintab.entities.IssueDataModel;
@@ -35,7 +35,7 @@ public class MainActivity extends LifecycleActivity {
 
     private RecyclerView mRecyclerView;
     private ProgressDialog mDialog;
-    private DataAdapter mAdapter;
+    private IssueDataAdapter mAdapter;
     private EditText mSearchEditText;
     private RootViewModel mViewModel;
     private List<IssueDataModel> caches;
@@ -108,7 +108,7 @@ public class MainActivity extends LifecycleActivity {
                 mRecyclerView.getContext(), LinearLayoutManager.VERTICAL
         );
         mRecyclerView.addItemDecoration(mDividerItemDecoration);
-        mAdapter = new DataAdapter(getLayoutInflater());
+        mAdapter = new IssueDataAdapter(getLayoutInflater());
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.addOnItemTouchListener(
