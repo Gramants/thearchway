@@ -60,7 +60,7 @@ public class IssueListFragment extends LifecycleFragment {
                 handleResponse(apiResponse);
                 }
             }
-            mRootViewModel.hideDialog();
+            mRootViewModel.setDialog(false);
         });
 
 
@@ -88,7 +88,7 @@ public class IssueListFragment extends LifecycleFragment {
 
         if (!((IssueDataModel)issues.get(0)).getError().isEmpty()) {
             mAdapter.clearIssues();
-
+            mRootViewModel.setSnackBar(((IssueDataModel)issues.get(0)).getError());
         } else {
             mAdapter.addIssues(issues);
         }

@@ -27,6 +27,7 @@ public class RootViewModel extends AndroidViewModel {
     private MediatorLiveData<List<ContributorDataModel>> mApiContributorResponse;
     final MutableLiveData<Boolean> livedatashowdialog=new MutableLiveData<>();
     final MutableLiveData<String> livedatasavedstring = new MutableLiveData<>();
+    final MutableLiveData<String> livedatasnackbar= new MutableLiveData<>();
 
     @Inject
     IssueRepository mIssueRepository;
@@ -87,14 +88,20 @@ public class RootViewModel extends AndroidViewModel {
         return livedatasavedstring;
     }
 
-    public LiveData<Boolean> hideDialog() {
-        livedatashowdialog.setValue(false);
-        return livedatashowdialog;
-    }
-    public LiveData<Boolean> showDialog() {
-        livedatashowdialog.setValue(true);
+
+
+
+    public MutableLiveData<Boolean> showDialog() {
         return livedatashowdialog;
     }
 
-
+    public MutableLiveData<String> getSnackBar() {
+        return livedatasnackbar;
+    }
+    public void setSnackBar(String msg) {
+        livedatasnackbar.setValue(msg);
+    }
+    public void setDialog(Boolean visible) {
+        livedatashowdialog.setValue(visible);
+    }
 }

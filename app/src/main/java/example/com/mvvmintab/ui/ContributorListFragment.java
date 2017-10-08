@@ -58,7 +58,7 @@ public class ContributorListFragment extends LifecycleFragment {
                 handleResponse(apiResponse);
                 }
             }
-            mRootViewModel.hideDialog();
+            mRootViewModel.setDialog(false);
         });
 
 

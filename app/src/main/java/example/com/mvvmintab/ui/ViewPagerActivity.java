@@ -6,6 +6,8 @@ import android.arch.lifecycle.LifecycleActivity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -33,6 +35,7 @@ public class ViewPagerActivity extends LifecycleActivity {
     private RootViewModel mViewModel;
     private SearchView searchview;
     private ProgressDialog mDialog;
+    private CoordinatorLayout mCoordinator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,7 @@ public class ViewPagerActivity extends LifecycleActivity {
         setupViewPager(viewPager);
 
         searchview = (SearchView) findViewById(R.id.searchstring); // inititate a search view
-
+        mCoordinator= (CoordinatorLayout) findViewById(R.id.tabanim_maincontent);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabanim_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -59,13 +62,13 @@ public class ViewPagerActivity extends LifecycleActivity {
 
                 switch (tab.getPosition()) {
                     case 0:
-                        showToast("One");
+                        //showToast("One");
                         break;
                     case 1:
-                        showToast("Two");
+                        //showToast("Two");
                         break;
                     case 2:
-                        showToast("Three");
+                        //showToast("Three");
                         break;
                 }
             }
@@ -96,6 +99,7 @@ public class ViewPagerActivity extends LifecycleActivity {
                         mViewModel.loadIssues(query[0], query[1],true);
                         mViewModel.loadContributor(query[0], query[1],true);
                         mViewModel.saveSearchString(query[0]+"/"+query[1]);
+                        searchview.clearFocus();
                     } else {
                         handleError("Error wrong format of input. Required format owner/repository_name");
                     }
@@ -119,7 +123,7 @@ public class ViewPagerActivity extends LifecycleActivity {
         mDialog.setTitle(getString(R.string.progress_title));
         mDialog.setMessage(getString(R.string.progress_body));
         mDialog.setCancelable(false);
-        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.setCanceledOnTouchOutside(true);
     }
 
     void showToast(String msg) {
@@ -185,8 +189,9 @@ public class ViewPagerActivity extends LifecycleActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mViewModel.loadIssues("fromdb", "fromdb",false);
-        mViewModel.loadContributor("fromdb", "fromdb",false);
+
+        getLocalDataIfAny();
+
 
         mViewModel.getSearchString().observe(this, searchString -> {
              searchview.setIconified(false);
@@ -194,19 +199,26 @@ public class ViewPagerActivity extends LifecycleActivity {
 
          });
 
+        searchview.clearFocus();
+
         mViewModel.showDialog().observe(this, showDialog -> {
             setProgress(showDialog);
         });
 
+
+        mViewModel.getSnackBar().observe(this, snackMsg -> {
+            handleError(snackMsg);
+        });
+
+
+    }
+
+    private void getLocalDataIfAny() {
+        mViewModel.loadIssues("fromdb", "fromdb",false);
+        mViewModel.loadContributor("fromdb", "fromdb",false);
     }
 
 
-    private void hideSoftKeyboard(Activity activity, View view) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(
-                Context.INPUT_METHOD_SERVICE
-        );
-        imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
-    }
 
     public void setProgress(boolean flag) {
         if (flag) {
@@ -215,8 +227,9 @@ public class ViewPagerActivity extends LifecycleActivity {
             mDialog.dismiss();
         }
     }
-    private void handleError(String msg) {
+    private void handleError(String snackMsg) {
         setProgress(false);
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Snackbar snackbar = Snackbar.make(mCoordinator, snackMsg, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 }
