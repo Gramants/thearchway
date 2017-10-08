@@ -95,10 +95,11 @@ public class ViewPagerActivity extends LifecycleActivity {
                 if (repo.length() > 0) {
                     String[] query = repo.split("/");
                     if (query.length == 2) {
-                        setProgress(true);
+                        //setProgress(true);
                         mViewModel.loadIssues(query[0], query[1],true);
                         mViewModel.loadContributor(query[0], query[1],true);
                         mViewModel.saveSearchString(query[0]+"/"+query[1]);
+                        mViewModel.setDialog(true);
                         searchview.clearFocus();
                     } else {
                         handleError("Error wrong format of input. Required format owner/repository_name");
@@ -116,7 +117,7 @@ public class ViewPagerActivity extends LifecycleActivity {
             }
         });
 
-
+/*
         mDialog = new ProgressDialog(ViewPagerActivity.this);
         mDialog.setIndeterminate(true);
         mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -124,6 +125,7 @@ public class ViewPagerActivity extends LifecycleActivity {
         mDialog.setMessage(getString(R.string.progress_body));
         mDialog.setCancelable(false);
         mDialog.setCanceledOnTouchOutside(true);
+  */
     }
 
     void showToast(String msg) {
@@ -202,7 +204,7 @@ public class ViewPagerActivity extends LifecycleActivity {
         searchview.clearFocus();
 
         mViewModel.showDialog().observe(this, showDialog -> {
-            setProgress(showDialog);
+            //setProgress(showDialog);
         });
 
 
@@ -219,7 +221,7 @@ public class ViewPagerActivity extends LifecycleActivity {
     }
 
 
-
+/*
     public void setProgress(boolean flag) {
         if (flag) {
             mDialog.show();
@@ -227,8 +229,10 @@ public class ViewPagerActivity extends LifecycleActivity {
             mDialog.dismiss();
         }
     }
+
+    */
     private void handleError(String snackMsg) {
-        setProgress(false);
+        //setProgress(false);
         Snackbar snackbar = Snackbar.make(mCoordinator, snackMsg, Snackbar.LENGTH_LONG);
         snackbar.show();
     }

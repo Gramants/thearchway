@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class IssueListFragment extends LifecycleFragment {
 
     private RecyclerView mRecyclerView;
     private IssueDataAdapter mAdapter;
+    private ProgressBar marker_progress;
 
     @SuppressLint("ValidFragment")
     public IssueListFragment(int color) {
@@ -43,7 +45,7 @@ public class IssueListFragment extends LifecycleFragment {
         final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.dummyfrag_bg);
         frameLayout.setBackgroundColor(color);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-
+        marker_progress = (ProgressBar) view.findViewById(R.id.marker_progress);
         mRootViewModel = ViewModelProviders.of(getActivity()).get(RootViewModel.class);
 
         return view;
@@ -60,7 +62,8 @@ public class IssueListFragment extends LifecycleFragment {
                 handleResponse(apiResponse);
                 }
             }
-            mRootViewModel.setDialog(false);
+            marker_progress.setVisibility(View.GONE);
+            //mRootViewModel.setDialog(false);
         });
 
 
@@ -80,7 +83,9 @@ public class IssueListFragment extends LifecycleFragment {
         mRecyclerView.setAdapter(mAdapter);
 
 
-
+        mRootViewModel.showDialog().observe(this, showDialog -> {
+            marker_progress.setVisibility(showDialog?View.VISIBLE:View.GONE);
+        });
     }
 
 
@@ -91,6 +96,7 @@ public class IssueListFragment extends LifecycleFragment {
             mRootViewModel.setSnackBar(((IssueDataModel)issues.get(0)).getError());
         } else {
             mAdapter.addIssues(issues);
+            marker_progress.setVisibility(View.GONE);
         }
 
 

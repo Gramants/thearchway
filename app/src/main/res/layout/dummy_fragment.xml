@@ -5,11 +5,18 @@
              android:layout_height="match_parent"
             >
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:scrollbars="vertical"
         android:layout_height="wrap_content"
   />
-
+    <ProgressBar
+        android:indeterminate="true"
+        android:id="@+id/marker_progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
+        android:visibility="gone"/>
 </FrameLayout>
