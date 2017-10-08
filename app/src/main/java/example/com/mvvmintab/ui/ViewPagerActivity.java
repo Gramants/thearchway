@@ -198,6 +198,9 @@ public class ViewPagerActivity extends LifecycleActivity {
 
          });
 
+        mViewModel.showDialog().observe(this, showDialog -> {
+            setProgress(showDialog);
+        });
 
     }
 

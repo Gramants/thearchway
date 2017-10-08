@@ -25,7 +25,7 @@ public class RootViewModel extends AndroidViewModel {
 
     private MediatorLiveData<List<IssueDataModel>> mApiIssueResponse;
     private MediatorLiveData<List<ContributorDataModel>> mApiContributorResponse;
-
+    final MutableLiveData<Boolean> livedatashowdialog=new MutableLiveData<>();
     final MutableLiveData<String> livedatasavedstring = new MutableLiveData<>();
 
     @Inject
@@ -86,5 +86,15 @@ public class RootViewModel extends AndroidViewModel {
         livedatasavedstring.setValue( mPersistentStorageProxy.getSearchString());
         return livedatasavedstring;
     }
+
+    public LiveData<Boolean> hideDialog() {
+        livedatashowdialog.setValue(false);
+        return livedatashowdialog;
+    }
+    public LiveData<Boolean> showDialog() {
+        livedatashowdialog.setValue(true);
+        return livedatashowdialog;
+    }
+
 
 }

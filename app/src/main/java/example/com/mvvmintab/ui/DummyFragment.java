@@ -71,7 +71,7 @@ public class DummyFragment extends LifecycleFragment {
                     ((IssueDataModel)issues.get(0)).getError(),
                     Toast.LENGTH_SHORT
             ).show();
-            //mAdapter.clearIssues();
+
 
         } else {
             Toast.makeText(
@@ -82,6 +82,8 @@ public class DummyFragment extends LifecycleFragment {
 
 
         }
+
+        mRootViewModel.hideDialog();
     }
 
 
