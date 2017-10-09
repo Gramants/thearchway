@@ -14,5 +14,5 @@ public interface IssueRepository {
 
     LiveData<IssueDataModel> getIssueFromDb(int id);
 
-    void deleteRecordById(int id);
+    void deleteIssueRecordById(int id);
 }

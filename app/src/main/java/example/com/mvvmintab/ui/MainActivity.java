@@ -149,7 +149,7 @@ public class MainActivity extends LifecycleActivity {
 
                 }
 
-                mViewModel.deleteRecordById( ((IssueDataModel)  caches.get(position)).getId());
+                mViewModel.deleteIssueRecordById( ((IssueDataModel)  caches.get(position)).getId());
 
             }
         };

@@ -76,9 +76,10 @@ public class IssueRepositoryImpl implements IssueRepository {
     }
 
     @Override
-    public void deleteRecordById(int id) {
+    public void deleteIssueRecordById(int id) {
         new IssueDbManager.DeleteIssueByIdAsyncTask(mProjectDb).execute(id);
     }
+
 
 
     private void deleteTableAndSaveDataToLocal(ArrayList<IssueDataModel> issues) {

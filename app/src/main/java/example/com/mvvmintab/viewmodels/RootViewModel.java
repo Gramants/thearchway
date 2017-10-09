@@ -21,8 +21,6 @@ import example.com.mvvmintab.repositories.preferences.PersistentStorageProxy;
 
 public class RootViewModel extends AndroidViewModel {
 
-    //https://stackoverflow.com/questions/44270577/android-lifecycle-library-viewmodel-using-dagger-2
-
     private MediatorLiveData<List<IssueDataModel>> mApiIssueResponse;
     private MediatorLiveData<List<ContributorDataModel>> mApiContributorResponse;
     final MutableLiveData<Boolean> liveDataShowDialogTab1=new MutableLiveData<>();
@@ -46,17 +44,19 @@ public class RootViewModel extends AndroidViewModel {
         mApiIssueResponse = new MediatorLiveData<>();
         mApiContributorResponse = new MediatorLiveData<>();
         ((App) application).getAppRepositoryComponent().inject(this);
-
     }
 
+
+ // operation of Issue data
 
     @NonNull
     public LiveData<List<IssueDataModel>> getApiIssueResponse() {
         return mApiIssueResponse;
     }
-    @NonNull
-    public LiveData<List<ContributorDataModel>> getApiContributorResponse() {return mApiContributorResponse;}
 
+    public void deleteIssueRecordById(Integer id) {
+        mIssueRepository.deleteIssueRecordById(id);
+    }
 
     public LiveData<List<IssueDataModel>> loadIssues(@NonNull String user, String repo, Boolean forceremote) {
         mApiIssueResponse.addSource(
@@ -65,6 +65,13 @@ public class RootViewModel extends AndroidViewModel {
         );
         return mApiIssueResponse;
     }
+
+
+    // operation of Contributor data
+
+    @NonNull
+    public LiveData<List<ContributorDataModel>> getApiContributorResponse() {return mApiContributorResponse;}
+
 
     public LiveData<List<ContributorDataModel>> loadContributor(@NonNull String user, String repo, Boolean forceremote) {
         mApiIssueResponse.addSource(
@@ -75,9 +82,9 @@ public class RootViewModel extends AndroidViewModel {
     }
 
 
-    public void deleteRecordById(Integer id) {
-        mIssueRepository.deleteRecordById(id);
-    }
+
+// Root operations on mainactivity and fragments
+
 
 
     public void saveSearchString(String searchstring) {
@@ -90,24 +97,27 @@ public class RootViewModel extends AndroidViewModel {
     }
 
 
+    public MutableLiveData<String> getSnackBar() {
+        return livedatasnackbar;
+    }
 
+    public void setSnackBar(String msg) {
+        livedatasnackbar.setValue(msg);
+    }
 
     public MutableLiveData<Boolean> showDialogTab1() {
         return liveDataShowDialogTab1;
     }
 
+    public void setDialogTab1(Boolean visible) {
+        liveDataShowDialogTab1.setValue(visible);
+    }
+
+
     public MutableLiveData<Boolean> showDialogTab2() {
         return liveDataShowDialogTab2;
     }
 
-    public MutableLiveData<String> getSnackBar() {
-        return livedatasnackbar;
-    }
-    public void setSnackBar(String msg) {
-        livedatasnackbar.setValue(msg);
-    }
-    public void setDialogTab1(Boolean visible) {
-        liveDataShowDialogTab1.setValue(visible);
-    }
-    public void setDialogTab2(Boolean visible) {liveDataShowDialogTab2.setValue(visible);}
+    public void setDialogTab2(Boolean visible) {
+        liveDataShowDialogTab2.setValue(visible);}
 }

@@ -98,6 +98,7 @@ public class ContributorListFragment extends LifecycleFragment {
             mAdapter.clearContributors();
             mRootViewModel.setSnackBar(((ContributorDataModel)elements.get(0)).getError());
         } else {
+            mAdapter.clearContributors();
             mAdapter.addContributors(elements);
             marker_progress.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);

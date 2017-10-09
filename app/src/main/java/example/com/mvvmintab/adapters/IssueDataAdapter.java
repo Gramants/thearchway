@@ -46,7 +46,6 @@ public class IssueDataAdapter extends RecyclerView.Adapter<IssueDataAdapter.Hold
     }
 
     public void addIssues(List<IssueDataModel> issues) {
-        //mIssueList.clear();
         mIssueList.addAll(issues);
         notifyDataSetChanged();
     }
