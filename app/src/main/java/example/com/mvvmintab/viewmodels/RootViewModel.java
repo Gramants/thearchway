@@ -25,7 +25,8 @@ public class RootViewModel extends AndroidViewModel {
 
     private MediatorLiveData<List<IssueDataModel>> mApiIssueResponse;
     private MediatorLiveData<List<ContributorDataModel>> mApiContributorResponse;
-    final MutableLiveData<Boolean> livedatashowdialog=new MutableLiveData<>();
+    final MutableLiveData<Boolean> liveDataShowDialogTab1=new MutableLiveData<>();
+    final MutableLiveData<Boolean> liveDataShowDialogTab2=new MutableLiveData<>();
     final MutableLiveData<String> livedatasavedstring = new MutableLiveData<>();
     final MutableLiveData<String> livedatasnackbar= new MutableLiveData<>();
 
@@ -91,8 +92,12 @@ public class RootViewModel extends AndroidViewModel {
 
 
 
-    public MutableLiveData<Boolean> showDialog() {
-        return livedatashowdialog;
+    public MutableLiveData<Boolean> showDialogTab1() {
+        return liveDataShowDialogTab1;
+    }
+
+    public MutableLiveData<Boolean> showDialogTab2() {
+        return liveDataShowDialogTab2;
     }
 
     public MutableLiveData<String> getSnackBar() {
@@ -101,7 +106,8 @@ public class RootViewModel extends AndroidViewModel {
     public void setSnackBar(String msg) {
         livedatasnackbar.setValue(msg);
     }
-    public void setDialog(Boolean visible) {
-        livedatashowdialog.setValue(visible);
+    public void setDialogTab1(Boolean visible) {
+        liveDataShowDialogTab1.setValue(visible);
     }
+    public void setDialogTab2(Boolean visible) {liveDataShowDialogTab2.setValue(visible);}
 }

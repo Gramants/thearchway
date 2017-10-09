@@ -11,4 +11,8 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGrey">#707070</color>
     <color name="colorGreyLight">#8A8A8A</color>
+
+    <color name="color_tab1">#aac5df</color>
+    <color name="color_tab2">#d4c158</color>
+    <color name="color_tab3">#957996</color>
 </resources>

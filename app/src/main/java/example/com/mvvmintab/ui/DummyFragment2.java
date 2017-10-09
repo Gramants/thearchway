@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
 
 import java.util.List;
 
@@ -30,9 +30,9 @@ public class DummyFragment2 extends LifecycleFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dummy_fragment, container, false);
-        final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.dummyfrag_bg);
-        frameLayout.setBackgroundColor(color);
+        View view = inflater.inflate(R.layout.itemlist_fragment, container, false);
+        final RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.dummyfrag_bg);
+        relativeLayout.setBackgroundColor(color);
 
         mRootViewModel = ViewModelProviders.of(getActivity()).get(RootViewModel.class);
 

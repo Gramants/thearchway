@@ -8,13 +8,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
 
 import java.util.List;
 
@@ -41,9 +40,9 @@ public class IssueListFragment extends LifecycleFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dummy_fragment, container, false);
-        final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.dummyfrag_bg);
-        frameLayout.setBackgroundColor(color);
+        View view = inflater.inflate(R.layout.itemlist_fragment, container, false);
+        final RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.dummyfrag_bg);
+        relativeLayout.setBackgroundColor(color);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         marker_progress = (ProgressBar) view.findViewById(R.id.marker_progress);
         mRootViewModel = ViewModelProviders.of(getActivity()).get(RootViewModel.class);
@@ -62,8 +61,8 @@ public class IssueListFragment extends LifecycleFragment {
                 handleResponse(apiResponse);
                 }
             }
-            marker_progress.setVisibility(View.GONE);
-            //mRootViewModel.setDialog(false);
+            marker_progress.setVisibility(View.INVISIBLE);
+
         });
 
 
@@ -83,20 +82,23 @@ public class IssueListFragment extends LifecycleFragment {
         mRecyclerView.setAdapter(mAdapter);
 
 
-        mRootViewModel.showDialog().observe(this, showDialog -> {
-            marker_progress.setVisibility(showDialog?View.VISIBLE:View.GONE);
+        mRootViewModel.showDialogTab1().observe(this, showDialog -> {
+            marker_progress.setVisibility(showDialog?View.VISIBLE:View.INVISIBLE);
+            mRecyclerView.setVisibility(showDialog?View.INVISIBLE:View.VISIBLE);
+            mAdapter.clearIssues();
         });
     }
 
 
-    private void handleResponse(List<IssueDataModel> issues) {
+    private void handleResponse(List<IssueDataModel> elements) {
 
-        if (!((IssueDataModel)issues.get(0)).getError().isEmpty()) {
+        if (!((IssueDataModel)elements.get(0)).getError().isEmpty()) {
             mAdapter.clearIssues();
-            mRootViewModel.setSnackBar(((IssueDataModel)issues.get(0)).getError());
+            mRootViewModel.setSnackBar(((IssueDataModel)elements.get(0)).getError());
         } else {
-            mAdapter.addIssues(issues);
-            marker_progress.setVisibility(View.GONE);
+            mAdapter.addIssues(elements);
+            marker_progress.setVisibility(View.INVISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
         }
 
 

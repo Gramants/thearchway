@@ -46,7 +46,7 @@ public class ContributorDataAdapter extends RecyclerView.Adapter<ContributorData
     }
 
     public void addContributors(List<ContributorDataModel> issues) {
-        mContributorList.clear();
+        //mContributorList.clear();
         mContributorList.addAll(issues);
         notifyDataSetChanged();
     }

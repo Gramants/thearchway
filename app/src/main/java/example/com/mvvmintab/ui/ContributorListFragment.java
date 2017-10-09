@@ -12,7 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import java.util.List;
 
@@ -28,8 +29,11 @@ import example.com.mvvmintab.viewmodels.RootViewModel;
 public class ContributorListFragment extends LifecycleFragment {
     int color;
     private RootViewModel mRootViewModel;
+
+
     private RecyclerView mRecyclerView;
     private ContributorDataAdapter mAdapter;
+    private ProgressBar marker_progress;
 
     @SuppressLint("ValidFragment")
     public ContributorListFragment(int color) {
@@ -38,10 +42,11 @@ public class ContributorListFragment extends LifecycleFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dummy_fragment, container, false);
-        final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.dummyfrag_bg);
-        frameLayout.setBackgroundColor(color);
+        View view = inflater.inflate(R.layout.itemlist_fragment, container, false);
+        final RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.dummyfrag_bg);
+        relativeLayout.setBackgroundColor(color);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        marker_progress = (ProgressBar) view.findViewById(R.id.marker_progress);
         mRootViewModel = ViewModelProviders.of(getActivity()).get(RootViewModel.class);
 
         return view;
@@ -55,11 +60,14 @@ public class ContributorListFragment extends LifecycleFragment {
             if (apiResponse != null) {
                 if (apiResponse.size()>0)
                 {
-                handleResponse(apiResponse);
+                    handleResponse(apiResponse);
                 }
             }
-            mRootViewModel.setDialog(false);
+            marker_progress.setVisibility(View.INVISIBLE);
+
         });
+
+
 
 
         mRecyclerView.setRecycledViewPool(new RecyclerView.RecycledViewPool());
@@ -74,18 +82,25 @@ public class ContributorListFragment extends LifecycleFragment {
         mRecyclerView.addItemDecoration(mDividerItemDecoration);
         mAdapter = new ContributorDataAdapter(getLayoutInflater());
         mRecyclerView.setAdapter(mAdapter);
+
+
+        mRootViewModel.showDialogTab2().observe(this, showDialog -> {
+            marker_progress.setVisibility(showDialog?View.VISIBLE:View.INVISIBLE);
+            mRecyclerView.setVisibility(showDialog?View.INVISIBLE:View.VISIBLE);
+            mAdapter.clearContributors();
+        });
     }
 
 
-    private void handleResponse(List<ContributorDataModel> contributors) {
+    private void handleResponse(List<ContributorDataModel> elements) {
 
-
-        if (!((ContributorDataModel)contributors.get(0)).getError().isEmpty()) {
-
+        if (!((ContributorDataModel)elements.get(0)).getError().isEmpty()) {
             mAdapter.clearContributors();
-
+            mRootViewModel.setSnackBar(((ContributorDataModel)elements.get(0)).getError());
         } else {
-            mAdapter.addContributors(contributors);
+            mAdapter.addContributors(elements);
+            marker_progress.setVisibility(View.INVISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
         }
 
 

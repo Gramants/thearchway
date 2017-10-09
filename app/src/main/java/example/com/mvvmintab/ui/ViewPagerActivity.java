@@ -95,11 +95,11 @@ public class ViewPagerActivity extends LifecycleActivity {
                 if (repo.length() > 0) {
                     String[] query = repo.split("/");
                     if (query.length == 2) {
-                        //setProgress(true);
+                        mViewModel.setDialogTab1(true);
+                        mViewModel.setDialogTab2(true);
                         mViewModel.loadIssues(query[0], query[1],true);
                         mViewModel.loadContributor(query[0], query[1],true);
                         mViewModel.saveSearchString(query[0]+"/"+query[1]);
-                        mViewModel.setDialog(true);
                         searchview.clearFocus();
                     } else {
                         handleError("Error wrong format of input. Required format owner/repository_name");
@@ -112,20 +112,10 @@ public class ViewPagerActivity extends LifecycleActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-// do something when text changes
                 return false;
             }
         });
 
-/*
-        mDialog = new ProgressDialog(ViewPagerActivity.this);
-        mDialog.setIndeterminate(true);
-        mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mDialog.setTitle(getString(R.string.progress_title));
-        mDialog.setMessage(getString(R.string.progress_body));
-        mDialog.setCancelable(false);
-        mDialog.setCanceledOnTouchOutside(true);
-  */
     }
 
     void showToast(String msg) {
@@ -135,9 +125,9 @@ public class ViewPagerActivity extends LifecycleActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFrag(new IssueListFragment(ContextCompat.getColor(this, R.color.colorAccent)), "Issues");
-        adapter.addFrag(new ContributorListFragment(ContextCompat.getColor(this, R.color.colorGrey)), "Contributors");
-        adapter.addFrag(new DummyFragment2(ContextCompat.getColor(this, R.color.colorPrimary)), "tre");
+        adapter.addFrag(new IssueListFragment(ContextCompat.getColor(this, R.color.color_tab1)), "Issues");
+        adapter.addFrag(new ContributorListFragment(ContextCompat.getColor(this, R.color.color_tab2)), "Contributors");
+        adapter.addFrag(new DummyFragment2(ContextCompat.getColor(this, R.color.color_tab3)), "Mixup");
         viewPager.setAdapter(adapter);
     }
 
@@ -203,9 +193,6 @@ public class ViewPagerActivity extends LifecycleActivity {
 
         searchview.clearFocus();
 
-        mViewModel.showDialog().observe(this, showDialog -> {
-            //setProgress(showDialog);
-        });
 
 
         mViewModel.getSnackBar().observe(this, snackMsg -> {
@@ -221,18 +208,7 @@ public class ViewPagerActivity extends LifecycleActivity {
     }
 
 
-/*
-    public void setProgress(boolean flag) {
-        if (flag) {
-            mDialog.show();
-        } else {
-            mDialog.dismiss();
-        }
-    }
-
-    */
     private void handleError(String snackMsg) {
-        //setProgress(false);
         Snackbar snackbar = Snackbar.make(mCoordinator, snackMsg, Snackbar.LENGTH_LONG);
         snackbar.show();
     }
