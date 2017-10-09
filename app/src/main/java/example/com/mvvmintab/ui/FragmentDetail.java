@@ -66,14 +66,14 @@ public class FragmentDetail extends Fragment {
     
     private void subscribeDetailLoaded() {
 
-        mViewModel.getdbResponse().observe((LifecycleOwner) getActivity(),
+        mViewModel..observe((LifecycleOwner) getActivity(),
 
                 new Observer<IssueDataModel>() {
                     @Override
-                    public void onChanged(@Nullable IssueDataModel detailFromDb) {
+                    public void onChanged(@Nullable IssueDataModel item) {
 
-                        if (detailFromDb != null) {
-                            handleResponse(detailFromDb,mFragmentDetailBinding);
+                        if (item != null) {
+                            handleResponse(item,mFragmentDetailBinding);
 
                         }
                     }

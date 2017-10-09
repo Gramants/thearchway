@@ -27,15 +27,15 @@ public class ContributorDataAdapter extends RecyclerView.Adapter<ContributorData
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new Holder(mInflator.inflate(R.layout.issue_row, parent, false));
+        return new Holder(mInflator.inflate(R.layout.contributor_row, parent, false));
     }
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        holder.mTextViewTitle.setText("contribute of");
+        holder.mTextViewTitle.setText(mContributorList.get(position).getLogin());
         String id = String.valueOf(mContributorList.get(position).getId());
         holder.mTextViewId.setText(id);
-        holder.mTextViewCreator.setText(mContributorList.get(position).getLogin());
+        holder.mTextViewCreator.setText(mContributorList.get(position).getHtml_url());
 
 
     }

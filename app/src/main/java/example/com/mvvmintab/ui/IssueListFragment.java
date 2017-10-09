@@ -125,6 +125,9 @@ public class IssueListFragment extends LifecycleFragment {
 
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+                final int position = viewHolder.getAdapterPosition(); //swiped position
+                mRootViewModel.showItemBody(cache.get(position));
+                mRootViewModel.deleteIssueRecordById( ((IssueDataModel)  cache.get(position)).getId());
 
             }
         };

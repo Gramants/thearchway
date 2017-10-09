@@ -127,7 +127,7 @@ public class ViewPagerActivity extends LifecycleActivity {
 
         adapter.addFrag(new IssueListFragment(ContextCompat.getColor(this, R.color.color_tab1)), "Issues");
         adapter.addFrag(new ContributorListFragment(ContextCompat.getColor(this, R.color.color_tab2)), "Contributors");
-        adapter.addFrag(new DummyFragment2(ContextCompat.getColor(this, R.color.color_tab3)), "Mixup");
+        adapter.addFrag(new FragmentDetail(),"Detail");
         viewPager.setAdapter(adapter);
     }
 

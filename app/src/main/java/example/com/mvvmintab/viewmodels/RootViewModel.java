@@ -27,6 +27,7 @@ public class RootViewModel extends AndroidViewModel {
     final MutableLiveData<Boolean> liveDataShowDialogTab2=new MutableLiveData<>();
     final MutableLiveData<String> livedatasavedstring = new MutableLiveData<>();
     final MutableLiveData<String> livedatasnackbar= new MutableLiveData<>();
+    final MutableLiveData<IssueDataModel> liveDataShowItemBody= new MutableLiveData<>();
 
     @Inject
     IssueRepository mIssueRepository;
@@ -120,4 +121,12 @@ public class RootViewModel extends AndroidViewModel {
 
     public void setDialogTab2(Boolean visible) {
         liveDataShowDialogTab2.setValue(visible);}
+
+    public MutableLiveData<IssueDataModel> showIssueBodyContent() {
+        return liveDataShowItemBody;
+    }
+    public void showItemBody(IssueDataModel issueDataModel) {
+        liveDataShowItemBody.setValue(issueDataModel);
+    }
+
 }
