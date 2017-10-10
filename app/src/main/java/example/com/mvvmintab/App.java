@@ -7,6 +7,7 @@ import example.com.mvvmintab.di.AppModule;
 
 
 import example.com.mvvmintab.di.AppRepositoryModule;
+import example.com.mvvmintab.di.CheckNetworkModule;
 import example.com.mvvmintab.di.DaggerAppRepositoryComponent;
 import example.com.mvvmintab.di.DatabaseModule;
 import example.com.mvvmintab.di.AppRepositoryComponent;
@@ -26,6 +27,7 @@ public class App extends Application {
 
         appRepositoryComponent = DaggerAppRepositoryComponent.builder()
                 .appModule(new AppModule(this))
+                .checkNetworkModule(new CheckNetworkModule(this))
                 .preferencesModule(new PreferencesModule(this))
                 .apiServiceModule(new ApiServiceModule())
                 .databaseModule(new DatabaseModule())

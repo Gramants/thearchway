@@ -36,7 +36,7 @@ public class ViewPagerActivity extends LifecycleActivity {
     private SearchView searchview;
     private ProgressDialog mDialog;
     private CoordinatorLayout mCoordinator;
-
+    private String mSearchString;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,23 +91,9 @@ public class ViewPagerActivity extends LifecycleActivity {
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String repo) {
-
-                if (repo.length() > 0) {
-                    String[] query = repo.split("/");
-                    if (query.length == 2) {
-                        mViewModel.setDialogTab1(true);
-                        mViewModel.setDialogTab2(true);
-                        mViewModel.loadIssues(query[0], query[1],true);
-                        mViewModel.loadContributor(query[0], query[1],true);
-                        mViewModel.saveSearchString(query[0]+"/"+query[1]);
-                        searchview.clearFocus();
-                    } else {
-                        handleError("Error wrong format of input. Required format owner/repository_name");
-                    }
-                } else {
-                    handleError("IssueRepository name empty. Required format owner/repository_name");
-                }
-                return false;
+                        mSearchString=repo;
+                        mViewModel.askNetWork();
+                        return false;
             }
 
             @Override
@@ -182,6 +168,8 @@ public class ViewPagerActivity extends LifecycleActivity {
     protected void onStart() {
         super.onStart();
 
+        searchview.clearFocus();
+
         getLocalDataIfAny();
 
 
@@ -191,14 +179,23 @@ public class ViewPagerActivity extends LifecycleActivity {
 
          });
 
-        searchview.clearFocus();
 
-
+        mViewModel.isInternetConnected().observe(this, isConnected -> {
+            manageSearch(isConnected);
+        });
 
         mViewModel.getSnackBar().observe(this, snackMsg -> {
             handleError(snackMsg);
         });
 
+
+    }
+
+    private void manageSearch(Boolean isConnected) {
+        if (isConnected)
+            doSearch();
+        else
+            handleError("No internet connection available!");
 
     }
 
@@ -209,7 +206,31 @@ public class ViewPagerActivity extends LifecycleActivity {
 
 
     private void handleError(String snackMsg) {
+        searchview.clearFocus();
         Snackbar snackbar = Snackbar.make(mCoordinator, snackMsg, Snackbar.LENGTH_LONG);
         snackbar.show();
     }
+
+
+
+    private void doSearch()
+    {
+        if (mSearchString.length() > 0) {
+        String[] query = mSearchString.split("/");
+        if (query.length == 2) {
+            mViewModel.setDialogTab1(true);
+            mViewModel.setDialogTab2(true);
+            mViewModel.loadIssues(query[0], query[1],true);
+            mViewModel.loadContributor(query[0], query[1],true);
+            mViewModel.saveSearchString(query[0]+"/"+query[1]);
+            searchview.clearFocus();
+        } else {
+            handleError("Error wrong format of input. Required format owner/repository_name");
+        }
+    } else {
+        handleError("IssueRepository name empty. Required format owner/repository_name");
+    }
+    }
+
+
 }

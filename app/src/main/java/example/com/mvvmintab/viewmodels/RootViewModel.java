@@ -5,6 +5,9 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 
 import java.util.List;
@@ -16,6 +19,7 @@ import example.com.mvvmintab.entities.ContributorDataModel;
 import example.com.mvvmintab.entities.IssueDataModel;
 import example.com.mvvmintab.repositories.ContributorRepository;
 import example.com.mvvmintab.repositories.IssueRepository;
+import example.com.mvvmintab.repositories.api.checknetwork.CheckNetwork;
 import example.com.mvvmintab.repositories.preferences.PersistentStorageProxy;
 
 
@@ -28,6 +32,7 @@ public class RootViewModel extends AndroidViewModel {
     final MutableLiveData<String> livedatasavedstring = new MutableLiveData<>();
     final MutableLiveData<String> livedatasnackbar= new MutableLiveData<>();
     final MutableLiveData<IssueDataModel> liveDataShowItemBody= new MutableLiveData<>();
+    final MutableLiveData<Boolean> liveDataIsInternetConnected= new MutableLiveData<>();
 
     @Inject
     IssueRepository mIssueRepository;
@@ -38,6 +43,8 @@ public class RootViewModel extends AndroidViewModel {
     @Inject
     PersistentStorageProxy mPersistentStorageProxy;
 
+    @Inject
+    CheckNetwork mCheckNetwork;
 
 
     public RootViewModel(Application application) {
@@ -122,11 +129,26 @@ public class RootViewModel extends AndroidViewModel {
     public void setDialogTab2(Boolean visible) {
         liveDataShowDialogTab2.setValue(visible);}
 
+
+   
+    public void askNetWork() {
+        liveDataIsInternetConnected.setValue(mCheckNetwork.isConnectedToInternet());
+    }
+
+    public MutableLiveData<Boolean> isInternetConnected() {
+        return liveDataIsInternetConnected;
+    }
+
+
+
+
     public MutableLiveData<IssueDataModel> showIssueBodyContent() {
         return liveDataShowItemBody;
     }
     public void showItemBody(IssueDataModel issueDataModel) {
         liveDataShowItemBody.setValue(issueDataModel);
     }
+
+
 
 }

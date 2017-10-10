@@ -66,7 +66,7 @@ public class FragmentDetail extends Fragment {
     
     private void subscribeDetailLoaded() {
 
-        mViewModel..observe((LifecycleOwner) getActivity(),
+        mViewModel.getdbResponse().observe((LifecycleOwner) getActivity(),
 
                 new Observer<IssueDataModel>() {
                     @Override
