@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import javax.inject.Inject;
@@ -14,22 +15,25 @@ import example.com.mvvmintab.repositories.ContributorRepository;
 import example.com.mvvmintab.repositories.IssueRepository;
 
 
-public class DetailViewModel extends AndroidViewModel {
+public class InterFragmentsViewModel extends AndroidViewModel {
 
     private MediatorLiveData<IssueDataModel> mDbResponse;
-
+    final MutableLiveData<IssueDataModel> liveDataShowItemBody= new MutableLiveData<>();
     @Inject
     IssueRepository mIssueRepository;
 
     @Inject
     ContributorRepository mContributorRepository;
 
-    public DetailViewModel(Application application) {
+    public InterFragmentsViewModel(Application application) {
         super(application);
         mDbResponse = new MediatorLiveData<>();
         ((App) application).getAppRepositoryComponent().inject(this);
 
     }
+
+
+
 
 
     @NonNull
@@ -47,4 +51,14 @@ public class DetailViewModel extends AndroidViewModel {
 
         return mDbResponse;
     }
+
+
+
+    public MutableLiveData<IssueDataModel> showIssueBodyContent() {
+        return liveDataShowItemBody;
+    }
+    public void showItemBody(IssueDataModel issueDataModel) {
+        liveDataShowItemBody.setValue(issueDataModel);
+    }
+
 }

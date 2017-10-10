@@ -33,7 +33,7 @@ import android.view.ViewGroup;
 import example.com.mvvmintab.R;
 import example.com.mvvmintab.databinding.FragmentDetailBinding;
 import example.com.mvvmintab.entities.IssueDataModel;
-import example.com.mvvmintab.viewmodels.DetailViewModel;
+import example.com.mvvmintab.viewmodels.InterFragmentsViewModel;
 
 
 /**
@@ -42,14 +42,14 @@ import example.com.mvvmintab.viewmodels.DetailViewModel;
 public class FragmentDetail extends Fragment {
 
 
-    private DetailViewModel mViewModel;
+    private InterFragmentsViewModel mViewModel;
     private FragmentDetailBinding mFragmentDetailBinding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        mViewModel = ViewModelProviders.of(getActivity()).get(DetailViewModel.class);
+        mViewModel = ViewModelProviders.of(getActivity()).get(InterFragmentsViewModel.class);
         mFragmentDetailBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false);
 
         subscribeDetailLoaded();

@@ -26,6 +26,7 @@ import example.com.mvvmintab.R;
 import example.com.mvvmintab.adapters.IssueDataAdapter;
 import example.com.mvvmintab.adapters.RecyclerItemClickListener;
 import example.com.mvvmintab.entities.IssueDataModel;
+import example.com.mvvmintab.viewmodels.InterFragmentsViewModel;
 import example.com.mvvmintab.viewmodels.RootViewModel;
 
 
@@ -33,7 +34,7 @@ import example.com.mvvmintab.viewmodels.RootViewModel;
 public class IssueListFragment extends LifecycleFragment {
     int color;
     private RootViewModel mRootViewModel;
-
+    private InterFragmentsViewModel mInterFragmentsViewModel;
 
     private RecyclerView mRecyclerView;
     private IssueDataAdapter mAdapter;
@@ -53,6 +54,7 @@ public class IssueListFragment extends LifecycleFragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         marker_progress = (ProgressBar) view.findViewById(R.id.marker_progress);
         mRootViewModel = ViewModelProviders.of(getActivity()).get(RootViewModel.class);
+        mInterFragmentsViewModel = ViewModelProviders.of(getActivity()).get(InterFragmentsViewModel.class);
         return view;
     }
 
@@ -126,7 +128,7 @@ public class IssueListFragment extends LifecycleFragment {
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
                 final int position = viewHolder.getAdapterPosition(); //swiped position
-                mRootViewModel.showItemBody(cache.get(position));
+                mInterFragmentsViewModel.showItemBody(cache.get(position));
                 mRootViewModel.deleteIssueRecordById( ((IssueDataModel)  cache.get(position)).getId());
 
             }

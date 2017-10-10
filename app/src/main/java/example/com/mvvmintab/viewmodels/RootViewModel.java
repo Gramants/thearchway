@@ -31,7 +31,6 @@ public class RootViewModel extends AndroidViewModel {
     final MutableLiveData<Boolean> liveDataShowDialogTab2=new MutableLiveData<>();
     final MutableLiveData<String> livedatasavedstring = new MutableLiveData<>();
     final MutableLiveData<String> livedatasnackbar= new MutableLiveData<>();
-    final MutableLiveData<IssueDataModel> liveDataShowItemBody= new MutableLiveData<>();
     final MutableLiveData<Boolean> liveDataIsInternetConnected= new MutableLiveData<>();
 
     @Inject
@@ -130,7 +129,7 @@ public class RootViewModel extends AndroidViewModel {
         liveDataShowDialogTab2.setValue(visible);}
 
 
-   
+
     public void askNetWork() {
         liveDataIsInternetConnected.setValue(mCheckNetwork.isConnectedToInternet());
     }
@@ -140,14 +139,6 @@ public class RootViewModel extends AndroidViewModel {
     }
 
 
-
-
-    public MutableLiveData<IssueDataModel> showIssueBodyContent() {
-        return liveDataShowItemBody;
-    }
-    public void showItemBody(IssueDataModel issueDataModel) {
-        liveDataShowItemBody.setValue(issueDataModel);
-    }
 
 
 
