@@ -20,8 +20,10 @@ import java.util.List;
 import example.com.mvvmintab.R;
 import example.com.mvvmintab.adapters.ContributorDataAdapter;
 import example.com.mvvmintab.adapters.IssueDataAdapter;
+import example.com.mvvmintab.adapters.RecyclerItemClickListener;
 import example.com.mvvmintab.entities.ContributorDataModel;
 import example.com.mvvmintab.entities.IssueDataModel;
+import example.com.mvvmintab.viewmodels.InterFragmentsViewModel;
 import example.com.mvvmintab.viewmodels.RootViewModel;
 
 
@@ -34,6 +36,9 @@ public class ContributorListFragment extends LifecycleFragment {
     private RecyclerView mRecyclerView;
     private ContributorDataAdapter mAdapter;
     private ProgressBar marker_progress;
+
+    private InterFragmentsViewModel mInterFragmentsViewModel;
+    private List<ContributorDataModel> cache;
 
     @SuppressLint("ValidFragment")
     public ContributorListFragment(int color) {
@@ -48,7 +53,7 @@ public class ContributorListFragment extends LifecycleFragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         marker_progress = (ProgressBar) view.findViewById(R.id.marker_progress);
         mRootViewModel = ViewModelProviders.of(getActivity()).get(RootViewModel.class);
-
+        mInterFragmentsViewModel = ViewModelProviders.of(getActivity()).get(InterFragmentsViewModel.class);
         return view;
     }
 
@@ -89,6 +94,21 @@ public class ContributorListFragment extends LifecycleFragment {
             mRecyclerView.setVisibility(showDialog?View.INVISIBLE:View.VISIBLE);
             mAdapter.clearContributors();
         });
+
+
+
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getActivity(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        mInterFragmentsViewModel.showContributorContent( (ContributorDataModel) cache.get(position));
+                        mRootViewModel.setSnackBar("Contributor name added to Detail tab");
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+
+                    }
+                })
+        );
     }
 
 
@@ -98,6 +118,7 @@ public class ContributorListFragment extends LifecycleFragment {
             mAdapter.clearContributors();
             mRootViewModel.setSnackBar(((ContributorDataModel)elements.get(0)).getError());
         } else {
+            this.cache=elements;
             mAdapter.clearContributors();
             mAdapter.addContributors(elements);
             marker_progress.setVisibility(View.INVISIBLE);

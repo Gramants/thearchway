@@ -100,20 +100,14 @@ public class IssueListFragment extends LifecycleFragment {
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-
-                        /*
-                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                        Bundle b = new Bundle();
-                        b.putInt("id", ((IssueDataModel) caches.get(position)).getId());
-                        intent.putExtras(b);
-                        startActivity(intent);
-                        */
+                        mInterFragmentsViewModel.loadIssue( ((IssueDataModel)  cache.get(position)).getId());
+                        mRootViewModel.setSnackBar("Body opened in Detail by reading the database");
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
-                        Log.e("STEFANO","database id to delete:"+String.valueOf( ((IssueDataModel)  cache.get(position)).getId()));
-                        mRootViewModel.deleteIssueRecordById( ((IssueDataModel)  cache.get(position)).getId());
 
+                        mRootViewModel.deleteIssueRecordById( ((IssueDataModel)  cache.get(position)).getId());
+                        mRootViewModel.setSnackBar("Record deleted and NOT OPENED in Detail tab");
 
                     }
                 })
@@ -128,8 +122,9 @@ public class IssueListFragment extends LifecycleFragment {
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
                 final int position = viewHolder.getAdapterPosition(); //swiped position
-                mInterFragmentsViewModel.showItemBody(cache.get(position));
+                mInterFragmentsViewModel.showIssueContent( (IssueDataModel)  cache.get(position));
                 mRootViewModel.deleteIssueRecordById( ((IssueDataModel)  cache.get(position)).getId());
+                mRootViewModel.setSnackBar("Record opened in Detail tab passing the object and deleted");
 
             }
         };
@@ -141,9 +136,6 @@ public class IssueListFragment extends LifecycleFragment {
 
 
     private void handleResponse(List<IssueDataModel> elements) {
-
-        Log.e("STEFANO","elementi:"+String.valueOf(elements.size()));
-
 
         if (!((IssueDataModel)elements.get(0)).getError().isEmpty()) {
             mAdapter.clearIssues();

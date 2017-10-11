@@ -18,6 +18,7 @@ package example.com.mvvmintab.ui;
 
 
 
+import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -26,12 +27,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import example.com.mvvmintab.R;
 import example.com.mvvmintab.databinding.FragmentDetailBinding;
+import example.com.mvvmintab.entities.ContributorDataModel;
 import example.com.mvvmintab.entities.IssueDataModel;
 import example.com.mvvmintab.viewmodels.InterFragmentsViewModel;
 
@@ -39,51 +42,63 @@ import example.com.mvvmintab.viewmodels.InterFragmentsViewModel;
 /**
  * Shows a SeekBar that is synced with a value in a ViewModel.
  */
-public class FragmentDetail extends Fragment {
+public class FragmentDetail extends LifecycleFragment {
 
 
-    private InterFragmentsViewModel mViewModel;
+    private InterFragmentsViewModel mInterFragmentsViewModel;
     private FragmentDetailBinding mFragmentDetailBinding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-        mViewModel = ViewModelProviders.of(getActivity()).get(InterFragmentsViewModel.class);
+        mInterFragmentsViewModel = ViewModelProviders.of(getActivity()).get(InterFragmentsViewModel.class);
         mFragmentDetailBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false);
-
-        subscribeDetailLoaded();
         return mFragmentDetailBinding.getRoot();
-
-
     }
+
+
+
 
     public void onViewCreated(View v, Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
-
+        subscribeFragmentObservers();
     }
     
     
-    private void subscribeDetailLoaded() {
+    private void subscribeFragmentObservers() {
 
-        mViewModel.getdbResponse().observe((LifecycleOwner) getActivity(),
-
+        mInterFragmentsViewModel.getIssueDetail().observe((LifecycleOwner) getActivity(),
                 new Observer<IssueDataModel>() {
                     @Override
                     public void onChanged(@Nullable IssueDataModel item) {
-
                         if (item != null) {
-                            handleResponse(item,mFragmentDetailBinding);
-
+                            mFragmentDetailBinding.setIssue(item);
                         }
                     }
-
-
         });
+
+
+        mInterFragmentsViewModel.getIssueContent().observe((LifecycleOwner) getActivity(),
+                new Observer<IssueDataModel>() {
+                    @Override
+                    public void onChanged(@Nullable IssueDataModel item) {
+                        if (item != null) {
+                            mFragmentDetailBinding.setIssue(item);
+                        }
+                    }
+                });
+
+
+        mInterFragmentsViewModel.getContributorContent().observe((LifecycleOwner) getActivity(),
+                new Observer<ContributorDataModel>() {
+                    @Override
+                    public void onChanged(@Nullable ContributorDataModel item) {
+                        if (item != null) {
+                            mFragmentDetailBinding.setContributor(item);
+                        }
+                    }
+                });
+
     }
 
 
-    private void handleResponse(IssueDataModel issue, FragmentDetailBinding binding) {
-        binding.setIssue(issue);
-    }
 }

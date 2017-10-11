@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 
 import example.com.mvvmintab.App;
+import example.com.mvvmintab.entities.ContributorDataModel;
 import example.com.mvvmintab.entities.IssueDataModel;
 import example.com.mvvmintab.repositories.ContributorRepository;
 import example.com.mvvmintab.repositories.IssueRepository;
@@ -17,8 +18,10 @@ import example.com.mvvmintab.repositories.IssueRepository;
 
 public class InterFragmentsViewModel extends AndroidViewModel {
 
-    private MediatorLiveData<IssueDataModel> mDbResponse;
-    final MutableLiveData<IssueDataModel> liveDataShowItemBody= new MutableLiveData<>();
+    private MediatorLiveData<IssueDataModel> mIssueDetail;
+    final MutableLiveData<IssueDataModel> liveDataShowIssueContent= new MutableLiveData<>();
+    final MutableLiveData<ContributorDataModel> liveDataShowContributorContent= new MutableLiveData<>();
+
     @Inject
     IssueRepository mIssueRepository;
 
@@ -27,7 +30,7 @@ public class InterFragmentsViewModel extends AndroidViewModel {
 
     public InterFragmentsViewModel(Application application) {
         super(application);
-        mDbResponse = new MediatorLiveData<>();
+        mIssueDetail = new MediatorLiveData<>();
         ((App) application).getAppRepositoryComponent().inject(this);
 
     }
@@ -37,28 +40,34 @@ public class InterFragmentsViewModel extends AndroidViewModel {
 
 
     @NonNull
-    public LiveData<IssueDataModel> getdbResponse() {
-        return mDbResponse;
+    public LiveData<IssueDataModel> getIssueDetail() {
+        return mIssueDetail;
     }
 
 
     public LiveData<IssueDataModel> loadIssue(int id) {
         // https://stackoverflow.com/questions/45679896/android-mediatorlivedata-observer
-        mDbResponse.addSource(
+        mIssueDetail.addSource(
                 mIssueRepository.getIssueFromDb(id),
-                dbResponse -> mDbResponse.setValue(dbResponse)
+                dbResponse -> mIssueDetail.setValue(dbResponse)
         );
 
-        return mDbResponse;
+        return mIssueDetail;
     }
 
 
 
-    public MutableLiveData<IssueDataModel> showIssueBodyContent() {
-        return liveDataShowItemBody;
+    public MutableLiveData<IssueDataModel> getIssueContent() {
+        return liveDataShowIssueContent;
     }
-    public void showItemBody(IssueDataModel issueDataModel) {
-        liveDataShowItemBody.setValue(issueDataModel);
+    public void showIssueContent(IssueDataModel issueDataModel) {
+        liveDataShowIssueContent.setValue(issueDataModel);
     }
 
+    public MutableLiveData<ContributorDataModel> getContributorContent() {
+        return liveDataShowContributorContent;
+    }
+    public void showContributorContent(ContributorDataModel contributorDataModel) {
+        liveDataShowContributorContent.setValue(contributorDataModel);
+    }
 }
