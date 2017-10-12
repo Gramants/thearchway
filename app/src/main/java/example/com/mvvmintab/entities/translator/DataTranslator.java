@@ -7,6 +7,7 @@ import example.com.mvvmintab.entities.ContributorDataModel;
 import example.com.mvvmintab.entities.IssueDataModel;
 import example.com.mvvmintab.entities.pojos.Contributor;
 import example.com.mvvmintab.entities.pojos.Issue;
+import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 /**
@@ -17,14 +18,9 @@ public class DataTranslator {
 
     public static ArrayList<IssueDataModel> IssueTranslator(Response<List<Issue>> response) {
         ArrayList<IssueDataModel> transformed = new ArrayList();
-        if (response.isSuccessful()) {
             for (Issue listitem : response.body()) {
-                transformed.add(new IssueDataModel(listitem.getId(), listitem.getUrl(), listitem.getRepositoryUrl(), listitem.getNumber(), listitem.getTitle(), listitem.getState(), listitem.getCreatedAt(), listitem.getBody(), listitem.getUser().getLogin(), listitem.getUser().getUrl(), ""));
+                transformed.add(new IssueDataModel(listitem.getId(), listitem.getUrl(), listitem.getRepositoryUrl(), listitem.getNumber(), listitem.getTitle(), listitem.getState(), listitem.getCreatedAt(), listitem.getBody(), listitem.getUser().getLogin(), listitem.getUser().getUrl()));
             }
-        } else {
-            transformed.add(new IssueDataModel(-1, "", "", 0, "", "", "", "", "", "", response.message()));
-        }
-
         return transformed;
     }
 

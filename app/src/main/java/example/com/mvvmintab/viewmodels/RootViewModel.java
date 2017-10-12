@@ -9,6 +9,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 import example.com.mvvmintab.App;
 import example.com.mvvmintab.entities.ContributorDataModel;
 import example.com.mvvmintab.entities.IssueDataModel;
+import example.com.mvvmintab.entities.NetworkErrorObject;
 import example.com.mvvmintab.repositories.ContributorRepository;
 import example.com.mvvmintab.repositories.IssueRepository;
 import example.com.mvvmintab.repositories.api.checknetwork.CheckNetwork;
@@ -32,7 +34,8 @@ public class RootViewModel extends AndroidViewModel {
     final MutableLiveData<String> livedatasavedstring = new MutableLiveData<>();
     final MutableLiveData<String> livedatasnackbar = new MutableLiveData<>();
     final MutableLiveData<Boolean> liveDataIsInternetConnected = new MutableLiveData<>();
-
+    private String searchstring;
+    private Boolean fromremote;
     @Inject
     IssueRepository mIssueRepository;
 
@@ -61,11 +64,20 @@ public class RootViewModel extends AndroidViewModel {
         return mApiIssueResponse;
     }
 
+
+    public LiveData<NetworkErrorObject> getNetworkErrorResponse() {
+        return mIssueRepository.getNetworkError();
+    }
+
     public void deleteIssueRecordById(Integer id) {
         mIssueRepository.deleteIssueRecordById(id);
     }
 
-    public LiveData<List<IssueDataModel>> loadIssues(@NonNull String user, String repo, Boolean forceremote) {
+    public LiveData<List<IssueDataModel>> loadIssues(String user, String repo, Boolean forceremote) {
+        fromremote=forceremote;
+        if ( (user!=null)&&(repo!=null))
+            searchstring=user+"/"+repo;
+
         mApiIssueResponse.addSource(
                 mIssueRepository.getIssues(user, repo, forceremote),
                 apiIssueResponse -> mApiIssueResponse.setValue(apiIssueResponse)
@@ -89,8 +101,13 @@ public class RootViewModel extends AndroidViewModel {
     }
 
 
-    public void saveSearchString(String searchstring) {
-        mPersistentStorageProxy.setSearchString(searchstring);
+    public void saveSearchString() {
+        Log.e("STEFANO","save "+searchstring);
+        if ((searchstring!=null)&&(fromremote))
+        {
+            // save only if not null and from remote
+            mPersistentStorageProxy.setSearchString(searchstring);
+        }
     }
 
     public LiveData<String> getSearchString() {

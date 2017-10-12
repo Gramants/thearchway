@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import example.com.mvvmintab.R;
+import example.com.mvvmintab.entities.IssueDataModel;
+import example.com.mvvmintab.entities.NetworkErrorObject;
 import example.com.mvvmintab.viewmodels.RootViewModel;
 
 public class ViewPagerActivity extends LifecycleActivity {
@@ -95,6 +97,28 @@ public class ViewPagerActivity extends LifecycleActivity {
             }
         });
 
+
+
+
+        mViewModel.getSearchString().observe(this, searchString -> {
+            searchview.setIconified(false);
+            searchview.setQuery(new String(searchString),false);
+
+        });
+
+
+        mViewModel.isInternetConnected().observe(this, isConnected -> {
+            manageSearch(isConnected);
+        });
+
+        mViewModel.getNetworkErrorResponse().observe(this, networkError -> {
+            manageNetworkError(networkError);
+        });
+        mViewModel.getSnackBar().observe(this, snackMsg -> {
+            handleError(snackMsg);
+        });
+
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -161,23 +185,10 @@ public class ViewPagerActivity extends LifecycleActivity {
 
         getLocalDataIfAny();
 
+    }
 
-        mViewModel.getSearchString().observe(this, searchString -> {
-             searchview.setIconified(false);
-             searchview.setQuery(new String(searchString),false);
-
-         });
-
-
-        mViewModel.isInternetConnected().observe(this, isConnected -> {
-            manageSearch(isConnected);
-        });
-
-        mViewModel.getSnackBar().observe(this, snackMsg -> {
-            handleError(snackMsg);
-        });
-
-
+    private void manageNetworkError(NetworkErrorObject networkError) {
+        handleError(((NetworkErrorObject) networkError).getErrorMsg());
     }
 
     private void manageSearch(Boolean isConnected) {
@@ -190,14 +201,17 @@ public class ViewPagerActivity extends LifecycleActivity {
 
     private void getLocalDataIfAny() {
         mViewModel.loadIssues(null, null,false);
-        mViewModel.loadContributor(null, null,false);
+       // mViewModel.loadContributor(null, null,false);
     }
 
 
     private void handleError(String snackMsg) {
+        mViewModel.setDialogTab1(false);
+        mViewModel.setDialogTab2(false);
         searchview.clearFocus();
         Snackbar snackbar = Snackbar.make(mCoordinator, snackMsg, Snackbar.LENGTH_LONG);
         snackbar.show();
+
     }
 
 
@@ -210,8 +224,7 @@ public class ViewPagerActivity extends LifecycleActivity {
             mViewModel.setDialogTab1(true);
             mViewModel.setDialogTab2(true);
             mViewModel.loadIssues(query[0], query[1],true);
-            mViewModel.loadContributor(query[0], query[1],true);
-            mViewModel.saveSearchString(query[0]+"/"+query[1]);
+            //mViewModel.loadContributor(query[0], query[1],true);
             searchview.clearFocus();
         } else {
             handleError("Error wrong format of input. Required format owner/repository_name");

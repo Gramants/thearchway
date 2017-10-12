@@ -32,11 +32,9 @@ public class IssueDataModel {
     private String createdAt;
     @ColumnInfo(name = "body")
     private String body;
-    @ColumnInfo(name = "error")
-    private String error;
 
 
-    public IssueDataModel(Integer id, String url, String repositoryUrl, Integer number, String title, String state, String createdAt, String body, String username, String userurl,String error) {
+    public IssueDataModel(Integer id, String url, String repositoryUrl, Integer number, String title, String state, String createdAt, String body, String username, String userurl) {
         this.id = id;
         this.url = url;
         this.repositoryUrl = repositoryUrl;
@@ -47,7 +45,6 @@ public class IssueDataModel {
         this.body = body;
         this.username = username;
         this.userurl = userurl;
-        this.error = error;
     }
 
 
@@ -126,10 +123,6 @@ public class IssueDataModel {
     public String getBody() {
         return body;
     }
-
-    public String getError() {return error;}
-
-    public void setError(String error) {this.error = error;}
 
     public void setBody(String body) {
         this.body = body;

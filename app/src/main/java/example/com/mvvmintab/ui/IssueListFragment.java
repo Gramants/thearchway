@@ -55,6 +55,7 @@ public class IssueListFragment extends LifecycleFragment {
             if (apiResponse != null) {
                 if (apiResponse.size() > 0) {
                     handleResponse(apiResponse);
+                    mRootViewModel.saveSearchString();
                 }
             }
             marker_progress.setVisibility(View.INVISIBLE);
@@ -78,10 +79,13 @@ public class IssueListFragment extends LifecycleFragment {
 
         mRootViewModel.showDialogTab1().observe(this, showDialog -> {
             marker_progress.setVisibility(showDialog ? View.VISIBLE : View.INVISIBLE);
-            mRecyclerView.setVisibility(showDialog ? View.INVISIBLE : View.VISIBLE);
-            mAdapter.clearIssues();
+            //mRecyclerView.setVisibility(showDialog ? View.INVISIBLE : View.VISIBLE);
+            //mAdapter.clearIssues();
         });
 
+        mRootViewModel.getNetworkErrorResponse().observe(this, networkError -> {
+            marker_progress.setVisibility(View.INVISIBLE);
+        });
 
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
@@ -123,21 +127,13 @@ public class IssueListFragment extends LifecycleFragment {
 
 
     private void handleResponse(List<IssueDataModel> elements) {
-
-        if (!((IssueDataModel) elements.get(0)).getError().isEmpty()) {
-            mAdapter.clearIssues();
-            this.cache.clear();
-            mRootViewModel.setSnackBar(((IssueDataModel) elements.get(0)).getError());
-        } else {
             this.cache = elements;
             mAdapter.clearIssues();
             mAdapter.addIssues(elements);
             marker_progress.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
-        }
-
-
     }
+
 
 
 }

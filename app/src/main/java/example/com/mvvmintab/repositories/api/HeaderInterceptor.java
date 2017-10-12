@@ -14,6 +14,7 @@ public class HeaderInterceptor implements Interceptor {
     request = request.newBuilder()
         .addHeader("Accept", "application/json")
         .addHeader("Content-type", "application/json")
+            .addHeader("User-Agent", "request")
         .build();
     return chain.proceed(request);
   }
