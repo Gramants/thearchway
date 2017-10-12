@@ -1,10 +1,9 @@
 package example.com.mvvmintab.ui;
 
-import android.app.Activity;
+
 import android.app.ProgressDialog;
 import android.arch.lifecycle.LifecycleActivity;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -12,15 +11,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
-import android.widget.Toast;
 import android.widget.Toolbar;
 
 
@@ -86,8 +81,6 @@ public class ViewPagerActivity extends LifecycleActivity {
 
 
 
-
-// perform set on query text listener event
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String repo) {
@@ -104,15 +97,11 @@ public class ViewPagerActivity extends LifecycleActivity {
 
     }
 
-    void showToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFrag(new IssueListFragment(ContextCompat.getColor(this, R.color.color_tab1)), "Issues");
-        adapter.addFrag(new ContributorListFragment(ContextCompat.getColor(this, R.color.color_tab2)), "Contributors");
+        adapter.addFrag(new IssueListFragment(), "Issues");
+        adapter.addFrag(new ContributorListFragment(), "Contributors");
         adapter.addFrag(new FragmentDetail(),"Detail");
         viewPager.setAdapter(adapter);
     }
@@ -200,8 +189,8 @@ public class ViewPagerActivity extends LifecycleActivity {
     }
 
     private void getLocalDataIfAny() {
-        mViewModel.loadIssues("fromdb", "fromdb",false);
-        mViewModel.loadContributor("fromdb", "fromdb",false);
+        mViewModel.loadIssues(null, null,false);
+        mViewModel.loadContributor(null, null,false);
     }
 
 

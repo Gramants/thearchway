@@ -13,9 +13,6 @@ import example.com.mvvmintab.repositories.database.ContributorDao;
 import example.com.mvvmintab.repositories.database.IssueDao;
 import example.com.mvvmintab.repositories.database.ProjectDb;
 
-/**
- * Created by Stefano on 26/09/2017.
- */
 @Module
 public class DatabaseModule {
 

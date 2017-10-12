@@ -1,25 +1,19 @@
 package example.com.mvvmintab.ui;
 
-import android.annotation.SuppressLint;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import example.com.mvvmintab.R;
@@ -30,7 +24,6 @@ import example.com.mvvmintab.viewmodels.InterFragmentsViewModel;
 import example.com.mvvmintab.viewmodels.RootViewModel;
 
 
-@SuppressLint("ValidFragment")
 public class IssueListFragment extends LifecycleFragment {
     int color;
     private RootViewModel mRootViewModel;
@@ -41,14 +34,10 @@ public class IssueListFragment extends LifecycleFragment {
     private ProgressBar marker_progress;
     private List<IssueDataModel> cache;
 
-    @SuppressLint("ValidFragment")
-    public IssueListFragment(int color) {
-        this.color = color;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.itemlist_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
         final RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.dummyfrag_bg);
         relativeLayout.setBackgroundColor(color);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -64,16 +53,13 @@ public class IssueListFragment extends LifecycleFragment {
 
         mRootViewModel.getApiIssueResponse().observe(this, apiResponse -> {
             if (apiResponse != null) {
-                if (apiResponse.size()>0)
-                {
-                handleResponse(apiResponse);
+                if (apiResponse.size() > 0) {
+                    handleResponse(apiResponse);
                 }
             }
             marker_progress.setVisibility(View.INVISIBLE);
 
         });
-
-
 
 
         mRecyclerView.setRecycledViewPool(new RecyclerView.RecycledViewPool());
@@ -91,22 +77,24 @@ public class IssueListFragment extends LifecycleFragment {
 
 
         mRootViewModel.showDialogTab1().observe(this, showDialog -> {
-            marker_progress.setVisibility(showDialog?View.VISIBLE:View.INVISIBLE);
-            mRecyclerView.setVisibility(showDialog?View.INVISIBLE:View.VISIBLE);
+            marker_progress.setVisibility(showDialog ? View.VISIBLE : View.INVISIBLE);
+            mRecyclerView.setVisibility(showDialog ? View.INVISIBLE : View.VISIBLE);
             mAdapter.clearIssues();
         });
 
 
         mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-                        mInterFragmentsViewModel.loadIssue( ((IssueDataModel)  cache.get(position)).getId());
+                new RecyclerItemClickListener(getActivity(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        mInterFragmentsViewModel.loadIssue(((IssueDataModel) cache.get(position)).getId());
                         mRootViewModel.setSnackBar("Body opened in Detail by reading the database");
                     }
 
-                    @Override public void onLongItemClick(View view, int position) {
+                    @Override
+                    public void onLongItemClick(View view, int position) {
 
-                        mRootViewModel.deleteIssueRecordById( ((IssueDataModel)  cache.get(position)).getId());
+                        mRootViewModel.deleteIssueRecordById(((IssueDataModel) cache.get(position)).getId());
                         mRootViewModel.setSnackBar("Record deleted and NOT OPENED in Detail tab");
 
                     }
@@ -122,8 +110,8 @@ public class IssueListFragment extends LifecycleFragment {
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
                 final int position = viewHolder.getAdapterPosition(); //swiped position
-                mInterFragmentsViewModel.showIssueContent( (IssueDataModel)  cache.get(position));
-                mRootViewModel.deleteIssueRecordById( ((IssueDataModel)  cache.get(position)).getId());
+                mInterFragmentsViewModel.showIssueContent((IssueDataModel) cache.get(position));
+                mRootViewModel.deleteIssueRecordById(((IssueDataModel) cache.get(position)).getId());
                 mRootViewModel.setSnackBar("Record opened in Detail tab passing the object and deleted");
 
             }
@@ -134,15 +122,14 @@ public class IssueListFragment extends LifecycleFragment {
     }
 
 
-
     private void handleResponse(List<IssueDataModel> elements) {
 
-        if (!((IssueDataModel)elements.get(0)).getError().isEmpty()) {
+        if (!((IssueDataModel) elements.get(0)).getError().isEmpty()) {
             mAdapter.clearIssues();
             this.cache.clear();
-            mRootViewModel.setSnackBar(((IssueDataModel)elements.get(0)).getError());
+            mRootViewModel.setSnackBar(((IssueDataModel) elements.get(0)).getError());
         } else {
-            this.cache=elements;
+            this.cache = elements;
             mAdapter.clearIssues();
             mAdapter.addIssues(elements);
             marker_progress.setVisibility(View.INVISIBLE);

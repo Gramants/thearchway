@@ -12,9 +12,7 @@ import java.util.List;
 import example.com.mvvmintab.R;
 import example.com.mvvmintab.entities.IssueDataModel;
 
-/**
- * Created by shahbaz on 14/05/17.
- */
+
 public class IssueDataAdapter extends RecyclerView.Adapter<IssueDataAdapter.Holder> {
 
     private final LayoutInflater mInflator;
@@ -27,7 +25,7 @@ public class IssueDataAdapter extends RecyclerView.Adapter<IssueDataAdapter.Hold
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new Holder(mInflator.inflate(R.layout.issue_row, parent, false));
+        return new Holder(mInflator.inflate(R.layout.item_issue, parent, false));
     }
 
     @Override

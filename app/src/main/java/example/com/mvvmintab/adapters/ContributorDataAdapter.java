@@ -12,9 +12,7 @@ import java.util.List;
 import example.com.mvvmintab.R;
 import example.com.mvvmintab.entities.ContributorDataModel;
 
-/**
- * Created by shahbaz on 14/05/17.
- */
+
 public class ContributorDataAdapter extends RecyclerView.Adapter<ContributorDataAdapter.Holder> {
 
     private final LayoutInflater mInflator;
@@ -27,7 +25,7 @@ public class ContributorDataAdapter extends RecyclerView.Adapter<ContributorData
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new Holder(mInflator.inflate(R.layout.contributor_row, parent, false));
+        return new Holder(mInflator.inflate(R.layout.item_contributor, parent, false));
     }
 
     @Override

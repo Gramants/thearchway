@@ -27,11 +27,11 @@ public class RootViewModel extends AndroidViewModel {
 
     private MediatorLiveData<List<IssueDataModel>> mApiIssueResponse;
     private MediatorLiveData<List<ContributorDataModel>> mApiContributorResponse;
-    final MutableLiveData<Boolean> liveDataShowDialogTab1=new MutableLiveData<>();
-    final MutableLiveData<Boolean> liveDataShowDialogTab2=new MutableLiveData<>();
+    final MutableLiveData<Boolean> liveDataShowDialogTab1 = new MutableLiveData<>();
+    final MutableLiveData<Boolean> liveDataShowDialogTab2 = new MutableLiveData<>();
     final MutableLiveData<String> livedatasavedstring = new MutableLiveData<>();
-    final MutableLiveData<String> livedatasnackbar= new MutableLiveData<>();
-    final MutableLiveData<Boolean> liveDataIsInternetConnected= new MutableLiveData<>();
+    final MutableLiveData<String> livedatasnackbar = new MutableLiveData<>();
+    final MutableLiveData<Boolean> liveDataIsInternetConnected = new MutableLiveData<>();
 
     @Inject
     IssueRepository mIssueRepository;
@@ -54,7 +54,7 @@ public class RootViewModel extends AndroidViewModel {
     }
 
 
- // operation of Issue data
+    // operation of Issue data
 
     @NonNull
     public LiveData<List<IssueDataModel>> getApiIssueResponse() {
@@ -74,10 +74,10 @@ public class RootViewModel extends AndroidViewModel {
     }
 
 
-    // operation of Contributor data
-
     @NonNull
-    public LiveData<List<ContributorDataModel>> getApiContributorResponse() {return mApiContributorResponse;}
+    public LiveData<List<ContributorDataModel>> getApiContributorResponse() {
+        return mApiContributorResponse;
+    }
 
 
     public LiveData<List<ContributorDataModel>> loadContributor(@NonNull String user, String repo, Boolean forceremote) {
@@ -89,17 +89,12 @@ public class RootViewModel extends AndroidViewModel {
     }
 
 
-
-// Root operations on mainactivity and fragments
-
-
-
     public void saveSearchString(String searchstring) {
         mPersistentStorageProxy.setSearchString(searchstring);
     }
 
     public LiveData<String> getSearchString() {
-        livedatasavedstring.setValue( mPersistentStorageProxy.getSearchString());
+        livedatasavedstring.setValue(mPersistentStorageProxy.getSearchString());
         return livedatasavedstring;
     }
 
@@ -126,8 +121,8 @@ public class RootViewModel extends AndroidViewModel {
     }
 
     public void setDialogTab2(Boolean visible) {
-        liveDataShowDialogTab2.setValue(visible);}
-
+        liveDataShowDialogTab2.setValue(visible);
+    }
 
 
     public void askNetWork() {
@@ -137,9 +132,6 @@ public class RootViewModel extends AndroidViewModel {
     public MutableLiveData<Boolean> isInternetConnected() {
         return liveDataIsInternetConnected;
     }
-
-
-
 
 
 }

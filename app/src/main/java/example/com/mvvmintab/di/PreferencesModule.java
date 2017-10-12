@@ -11,9 +11,6 @@ import dagger.Provides;
 import example.com.mvvmintab.repositories.preferences.PersistentStorageProxy;
 import example.com.mvvmintab.repositories.preferences.PersistentStorageProxyImpl;
 
-/**
- * Created by Stefano on 29/09/2017.
- */
 @Module
 public class PreferencesModule {
 
