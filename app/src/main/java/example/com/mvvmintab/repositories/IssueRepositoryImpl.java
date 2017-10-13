@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import example.com.mvvmintab.Config;
 import example.com.mvvmintab.entities.IssueDataModel;
 import example.com.mvvmintab.entities.NetworkErrorObject;
 import example.com.mvvmintab.entities.pojos.Issue;
@@ -57,8 +58,7 @@ public class IssueRepositoryImpl implements IssueRepository {
                 else
                 {
                  //REST ERROR
-                    Log.e("STEFANO",response.toString());
-                 liveDataError.setValue(new NetworkErrorObject(response.code(),response.message()));
+                 liveDataError.setValue(new NetworkErrorObject(response.code(),response.message(), Config.ISSUE_ENDPOINT));
                 }
 
             }
@@ -66,7 +66,7 @@ public class IssueRepositoryImpl implements IssueRepository {
             @Override
             public void onFailure(Call<List<Issue>> call, Throwable t) {
                 // generic error
-                liveDataError.setValue(new NetworkErrorObject(0,"Unknown error"));
+                liveDataError.setValue(new NetworkErrorObject(0,"Unknown error", Config.ISSUE_ENDPOINT));
             }
         });
 

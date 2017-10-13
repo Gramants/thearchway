@@ -5,10 +5,15 @@ public class NetworkErrorObject {
     private int errorCode;
     private String errorMsg;
 
-    public NetworkErrorObject(int errorCode, String errorMsg) {
+    public NetworkErrorObject(int errorCode, String errorMsg, String endpointOrigin) {
         this.errorCode = errorCode;
         this.errorMsg = errorMsg;
+        this.endpointOrigin = endpointOrigin;
     }
+
+    private String endpointOrigin;
+
+
 
     public int getErrorCode() {
         return errorCode;
@@ -24,5 +29,13 @@ public class NetworkErrorObject {
 
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
+    }
+
+    public String getEndpointOrigin() {
+        return endpointOrigin;
+    }
+
+    public void setEndpointOrigin(String endpointOrigin) {
+        this.endpointOrigin = endpointOrigin;
     }
 }

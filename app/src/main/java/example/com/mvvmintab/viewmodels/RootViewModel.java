@@ -69,6 +69,7 @@ public class RootViewModel extends AndroidViewModel {
         return mIssueRepository.getNetworkError();
     }
 
+
     public void deleteIssueRecordById(Integer id) {
         mIssueRepository.deleteIssueRecordById(id);
     }
@@ -102,7 +103,7 @@ public class RootViewModel extends AndroidViewModel {
 
 
     public void saveSearchString() {
-        Log.e("STEFANO","save "+searchstring);
+
         if ((searchstring!=null)&&(fromremote))
         {
             // save only if not null and from remote

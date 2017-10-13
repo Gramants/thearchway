@@ -103,19 +103,11 @@ public class ContributorListFragment extends LifecycleFragment {
 
 
     private void handleResponse(List<ContributorDataModel> elements) {
-
-        if (!((ContributorDataModel)elements.get(0)).getError().isEmpty()) {
-            mAdapter.clearContributors();
-            mRootViewModel.setSnackBar(((ContributorDataModel)elements.get(0)).getError());
-        } else {
             this.cache=elements;
             mAdapter.clearContributors();
             mAdapter.addContributors(elements);
             marker_progress.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
-        }
-
-
     }
 
 

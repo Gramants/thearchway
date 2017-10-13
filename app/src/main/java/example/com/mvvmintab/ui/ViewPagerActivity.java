@@ -188,7 +188,7 @@ public class ViewPagerActivity extends LifecycleActivity {
     }
 
     private void manageNetworkError(NetworkErrorObject networkError) {
-        handleError(((NetworkErrorObject) networkError).getErrorMsg());
+        handleError(((NetworkErrorObject) networkError).getEndpointOrigin()+": "+((NetworkErrorObject) networkError).getErrorMsg());
     }
 
     private void manageSearch(Boolean isConnected) {
@@ -201,7 +201,7 @@ public class ViewPagerActivity extends LifecycleActivity {
 
     private void getLocalDataIfAny() {
         mViewModel.loadIssues(null, null,false);
-       // mViewModel.loadContributor(null, null,false);
+        mViewModel.loadContributor(null, null,false);
     }
 
 
@@ -224,7 +224,7 @@ public class ViewPagerActivity extends LifecycleActivity {
             mViewModel.setDialogTab1(true);
             mViewModel.setDialogTab2(true);
             mViewModel.loadIssues(query[0], query[1],true);
-            //mViewModel.loadContributor(query[0], query[1],true);
+            mViewModel.loadContributor(query[0], query[1],true);
             searchview.clearFocus();
         } else {
             handleError("Error wrong format of input. Required format owner/repository_name");

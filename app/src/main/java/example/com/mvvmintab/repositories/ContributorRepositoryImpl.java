@@ -8,8 +8,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import example.com.mvvmintab.Config;
 import example.com.mvvmintab.entities.ContributorDataModel;
 import example.com.mvvmintab.entities.IssueDataModel;
+import example.com.mvvmintab.entities.NetworkErrorObject;
 import example.com.mvvmintab.entities.pojos.Contributor;
 import example.com.mvvmintab.repositories.api.GithubApiService;
 import example.com.mvvmintab.repositories.database.ContributorDao;
@@ -20,6 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static example.com.mvvmintab.entities.translator.DataTranslator.ContributorTranslator;
+import static example.com.mvvmintab.entities.translator.DataTranslator.IssueTranslator;
 
 
 public class ContributorRepositoryImpl implements ContributorRepository {
@@ -27,6 +30,7 @@ public class ContributorRepositoryImpl implements ContributorRepository {
     private ContributorDao contributorDao;
     private GithubApiService mApiService;
     private ProjectDb mProjectDb;
+    private MutableLiveData<NetworkErrorObject> liveDataError = new MutableLiveData<>();
     @Inject
     public ContributorRepositoryImpl(ContributorDao contributorDao, ProjectDb mProjectDb, GithubApiService mApiService) {
         this.contributorDao = contributorDao;
@@ -36,7 +40,7 @@ public class ContributorRepositoryImpl implements ContributorRepository {
 
 
     public LiveData<List<ContributorDataModel>> getContributors(String owner, String repo, Boolean forceRemote) {
-        final MutableLiveData<List<ContributorDataModel>> liveData = new MutableLiveData<>();
+        final MutableLiveData<List<ContributorDataModel>> liveDataResult = new MutableLiveData<>();
 
         if (forceRemote)
         {
@@ -45,20 +49,30 @@ public class ContributorRepositoryImpl implements ContributorRepository {
             @Override
             public void onResponse(Call<List<Contributor>> call, Response<List<Contributor>> response) {
 
-                ArrayList<ContributorDataModel> transformed=new ArrayList();
-                transformed=ContributorTranslator(response);
-                deleteTableAndSaveDataToLocal(transformed);
-                liveData.setValue(transformed);
+                if (response.isSuccessful()) {
+                    ArrayList<ContributorDataModel> transformed=new ArrayList();
+                    transformed=ContributorTranslator(response);
+                    deleteTableAndSaveDataToLocal(transformed);
+                    liveDataResult.setValue(transformed);
+                }
+                else
+                {
+                    //REST ERROR
+                    liveDataError.setValue(new NetworkErrorObject(response.code(),response.message() , Config.CONTRIBUTOR_ENDPOINT));
+                }
+
             }
 
             @Override
             public void onFailure(Call<List<Contributor>> call, Throwable t) {
-                liveData.setValue(null);
+                liveDataError.setValue(new NetworkErrorObject(0,"Unknown error",Config.CONTRIBUTOR_ENDPOINT));
             }
         });
 
 
-            return liveData;
+
+
+            return liveDataResult;
         }
         else
         {
@@ -82,6 +96,7 @@ public class ContributorRepositoryImpl implements ContributorRepository {
     }
 
 
-
+    @Override
+    public LiveData<NetworkErrorObject> getNetworkError() {return liveDataError;}
 
 }

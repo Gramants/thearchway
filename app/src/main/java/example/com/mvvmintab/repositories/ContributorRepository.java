@@ -6,6 +6,7 @@ import java.util.List;
 
 import example.com.mvvmintab.entities.ContributorDataModel;
 import example.com.mvvmintab.entities.IssueDataModel;
+import example.com.mvvmintab.entities.NetworkErrorObject;
 
 
 public interface ContributorRepository {
@@ -14,4 +15,5 @@ public interface ContributorRepository {
 
     LiveData<ContributorDataModel> getContributorFromDb(int id);
 
+    LiveData<NetworkErrorObject> getNetworkError();
 }
