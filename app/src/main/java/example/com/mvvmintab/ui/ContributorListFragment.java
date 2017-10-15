@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,12 @@ import android.widget.RelativeLayout;
 
 import java.util.List;
 
+import example.com.mvvmintab.Config;
 import example.com.mvvmintab.R;
 import example.com.mvvmintab.adapters.ContributorDataAdapter;
 import example.com.mvvmintab.adapters.RecyclerItemClickListener;
 import example.com.mvvmintab.entities.ContributorDataModel;
+import example.com.mvvmintab.entities.NetworkErrorObject;
 import example.com.mvvmintab.viewmodels.InterFragmentsViewModel;
 import example.com.mvvmintab.viewmodels.RootViewModel;
 
@@ -79,14 +82,17 @@ public class ContributorListFragment extends LifecycleFragment {
         mRecyclerView.setAdapter(mAdapter);
 
 
-        mRootViewModel.showDialogTab2().observe(this, showDialog -> {
-            marker_progress.setVisibility(showDialog?View.VISIBLE:View.INVISIBLE);
-            mRecyclerView.setVisibility(showDialog?View.INVISIBLE:View.VISIBLE);
-            mAdapter.clearContributors();
+        mRootViewModel.getShowDialogIssueAndContributor().observe(this, showDialog -> {
+            marker_progress.setVisibility(showDialog ? View.VISIBLE : View.INVISIBLE);
         });
 
 
+        mRootViewModel.getContributorNetworkErrorResponse().observe(this, networkError -> {
+            marker_progress.setVisibility(View.INVISIBLE);
+            manageNetworkError(networkError);
+        });
 
+;
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
@@ -110,6 +116,12 @@ public class ContributorListFragment extends LifecycleFragment {
             mRecyclerView.setVisibility(View.VISIBLE);
     }
 
-
+    private void manageNetworkError(NetworkErrorObject networkError) {
+        if (((NetworkErrorObject) networkError).getEndpointOrigin().equals(Config.CONTRIBUTOR_ENDPOINT))
+            handleError(((NetworkErrorObject) networkError).getErrorMsg());
+    }
+    private void handleError(String snackMsg) {
+        Log.e("STEFANO","errore speciale in contributor");
+    }
 }
 

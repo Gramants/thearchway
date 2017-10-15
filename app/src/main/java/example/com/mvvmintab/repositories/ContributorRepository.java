@@ -16,4 +16,5 @@ public interface ContributorRepository {
     LiveData<ContributorDataModel> getContributorFromDb(int id);
 
     LiveData<NetworkErrorObject> getNetworkError();
+
 }

@@ -29,8 +29,7 @@ public class RootViewModel extends AndroidViewModel {
 
     private MediatorLiveData<List<IssueDataModel>> mApiIssueResponse;
     private MediatorLiveData<List<ContributorDataModel>> mApiContributorResponse;
-    final MutableLiveData<Boolean> liveDataShowDialogTab1 = new MutableLiveData<>();
-    final MutableLiveData<Boolean> liveDataShowDialogTab2 = new MutableLiveData<>();
+    final MutableLiveData<Boolean> liveDataShowDialogIssueAndContributor = new MutableLiveData<>();
     final MutableLiveData<String> livedatasavedstring = new MutableLiveData<>();
     final MutableLiveData<String> livedatasnackbar = new MutableLiveData<>();
     final MutableLiveData<Boolean> liveDataIsInternetConnected = new MutableLiveData<>();
@@ -65,10 +64,12 @@ public class RootViewModel extends AndroidViewModel {
     }
 
 
-    public LiveData<NetworkErrorObject> getNetworkErrorResponse() {
+    public LiveData<NetworkErrorObject> getIssueNetworkErrorResponse() {
         return mIssueRepository.getNetworkError();
     }
-
+    public LiveData<NetworkErrorObject> getContributorNetworkErrorResponse() {
+        return mContributorRepository.getNetworkError();
+    }
 
     public void deleteIssueRecordById(Integer id) {
         mIssueRepository.deleteIssueRecordById(id);
@@ -125,22 +126,14 @@ public class RootViewModel extends AndroidViewModel {
         livedatasnackbar.setValue(msg);
     }
 
-    public MutableLiveData<Boolean> showDialogTab1() {
-        return liveDataShowDialogTab1;
+    public MutableLiveData<Boolean> getShowDialogIssueAndContributor() {
+        return liveDataShowDialogIssueAndContributor;
     }
 
-    public void setDialogTab1(Boolean visible) {
-        liveDataShowDialogTab1.setValue(visible);
+    public void setShowDialogIssueAndContributor(Boolean visible) {
+        liveDataShowDialogIssueAndContributor.setValue(visible);
     }
 
-
-    public MutableLiveData<Boolean> showDialogTab2() {
-        return liveDataShowDialogTab2;
-    }
-
-    public void setDialogTab2(Boolean visible) {
-        liveDataShowDialogTab2.setValue(visible);
-    }
 
 
     public void askNetWork() {

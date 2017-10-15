@@ -111,9 +111,14 @@ public class ViewPagerActivity extends LifecycleActivity {
             manageSearch(isConnected);
         });
 
-        mViewModel.getNetworkErrorResponse().observe(this, networkError -> {
+        mViewModel.getIssueNetworkErrorResponse().observe(this, networkError -> {
             manageNetworkError(networkError);
         });
+
+        mViewModel.getContributorNetworkErrorResponse().observe(this, networkError -> {
+            manageNetworkError(networkError);
+        });
+
         mViewModel.getSnackBar().observe(this, snackMsg -> {
             handleError(snackMsg);
         });
@@ -188,7 +193,7 @@ public class ViewPagerActivity extends LifecycleActivity {
     }
 
     private void manageNetworkError(NetworkErrorObject networkError) {
-        handleError(((NetworkErrorObject) networkError).getEndpointOrigin()+": "+((NetworkErrorObject) networkError).getErrorMsg());
+        handleError(((NetworkErrorObject) networkError).getErrorMsg());
     }
 
     private void manageSearch(Boolean isConnected) {
@@ -206,8 +211,7 @@ public class ViewPagerActivity extends LifecycleActivity {
 
 
     private void handleError(String snackMsg) {
-        mViewModel.setDialogTab1(false);
-        mViewModel.setDialogTab2(false);
+        mViewModel.setShowDialogIssueAndContributor(false);
         searchview.clearFocus();
         Snackbar snackbar = Snackbar.make(mCoordinator, snackMsg, Snackbar.LENGTH_LONG);
         snackbar.show();
@@ -221,8 +225,8 @@ public class ViewPagerActivity extends LifecycleActivity {
         if (mSearchString.length() > 0) {
         String[] query = mSearchString.split("/");
         if (query.length == 2) {
-            mViewModel.setDialogTab1(true);
-            mViewModel.setDialogTab2(true);
+            mViewModel.setShowDialogIssueAndContributor(true);
+            //mViewModel.setDialogTab2(true);
             mViewModel.loadIssues(query[0], query[1],true);
             mViewModel.loadContributor(query[0], query[1],true);
             searchview.clearFocus();

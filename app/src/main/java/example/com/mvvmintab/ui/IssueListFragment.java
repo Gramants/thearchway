@@ -3,11 +3,14 @@ package example.com.mvvmintab.ui;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +19,12 @@ import android.widget.RelativeLayout;
 
 import java.util.List;
 
+import example.com.mvvmintab.Config;
 import example.com.mvvmintab.R;
 import example.com.mvvmintab.adapters.IssueDataAdapter;
 import example.com.mvvmintab.adapters.RecyclerItemClickListener;
 import example.com.mvvmintab.entities.IssueDataModel;
+import example.com.mvvmintab.entities.NetworkErrorObject;
 import example.com.mvvmintab.viewmodels.InterFragmentsViewModel;
 import example.com.mvvmintab.viewmodels.RootViewModel;
 
@@ -62,6 +67,9 @@ public class IssueListFragment extends LifecycleFragment {
 
         });
 
+        mRootViewModel.getContributorNetworkErrorResponse().observe(this, networkError -> {
+            manageNetworkError(networkError);
+        });
 
         mRecyclerView.setRecycledViewPool(new RecyclerView.RecycledViewPool());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(
@@ -77,14 +85,13 @@ public class IssueListFragment extends LifecycleFragment {
         mRecyclerView.setAdapter(mAdapter);
 
 
-        mRootViewModel.showDialogTab1().observe(this, showDialog -> {
+        mRootViewModel.getShowDialogIssueAndContributor().observe(this, showDialog -> {
             marker_progress.setVisibility(showDialog ? View.VISIBLE : View.INVISIBLE);
-            //mRecyclerView.setVisibility(showDialog ? View.INVISIBLE : View.VISIBLE);
-            //mAdapter.clearIssues();
         });
 
-        mRootViewModel.getNetworkErrorResponse().observe(this, networkError -> {
+        mRootViewModel.getIssueNetworkErrorResponse().observe(this, networkError -> {
             marker_progress.setVisibility(View.INVISIBLE);
+            manageNetworkError(networkError);
         });
 
         mRecyclerView.addOnItemTouchListener(
@@ -135,6 +142,14 @@ public class IssueListFragment extends LifecycleFragment {
     }
 
 
+
+    private void manageNetworkError(NetworkErrorObject networkError) {
+        if (((NetworkErrorObject) networkError).getEndpointOrigin().equals(Config.ISSUE_ENDPOINT))
+            handleError(((NetworkErrorObject) networkError).getErrorMsg());
+    }
+    private void handleError(String snackMsg) {
+        Log.e("STEFANO","errore speciale in issue");
+    }
 
 }
 

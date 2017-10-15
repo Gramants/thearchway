@@ -2,6 +2,7 @@ package example.com.mvvmintab.repositories;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,8 +88,6 @@ public class ContributorRepositoryImpl implements ContributorRepository {
     public LiveData<ContributorDataModel> getContributorFromDb(int id) {
         return contributorDao.getContributorById(id);
     }
-
-
 
 
     private void deleteTableAndSaveDataToLocal(ArrayList<ContributorDataModel> contributors) {
