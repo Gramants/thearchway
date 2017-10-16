@@ -3,6 +3,7 @@ package example.com.mvvmintab.ui;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,9 +52,8 @@ public class ContributorListFragment extends LifecycleFragment {
     }
 
 
-    public void onViewCreated(View v, Bundle savedInstanceState) {
-        super.onViewCreated(v, savedInstanceState);
-
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         mRootViewModel.getApiContributorResponse().observe(this, apiResponse -> {
             if (apiResponse != null) {
                 if (apiResponse.size()>0)
@@ -109,6 +109,7 @@ public class ContributorListFragment extends LifecycleFragment {
 
 
     private void handleResponse(List<ContributorDataModel> elements) {
+        Log.e("STEFANO","lista contributors "+String.valueOf(elements.size()));
             this.cache=elements;
             mAdapter.clearContributors();
             mAdapter.addContributors(elements);

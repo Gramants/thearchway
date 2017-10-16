@@ -25,13 +25,8 @@ public class IssueDbManager {
         @Override
         protected Void doInBackground(List<IssueDataModel>... issues) {
             db.issueDao().deleteAll();
-            List<IssueDataModel> results = new ArrayList<IssueDataModel>();
-            results=issues[0];
-            for (IssueDataModel issue : results) {
-                db.issueDao().insert(issue);
-            }
+            db.issueDao().insert(issues[0]);
             return null;
-
         }
     }
 

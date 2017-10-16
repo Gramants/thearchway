@@ -54,7 +54,7 @@ public class ContributorRepositoryImpl implements ContributorRepository {
                     ArrayList<ContributorDataModel> transformed=new ArrayList();
                     transformed=ContributorTranslator(response);
                     deleteTableAndSaveDataToLocal(transformed);
-                    liveDataResult.setValue(transformed);
+                    //liveDataResult.setValue(transformed);
                 }
                 else
                 {

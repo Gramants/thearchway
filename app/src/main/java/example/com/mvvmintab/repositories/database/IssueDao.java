@@ -26,6 +26,6 @@ public interface IssueDao {
   void deleteById(int id);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insert(IssueDataModel issue);
+  void insert(List<IssueDataModel> issue);
 
 }

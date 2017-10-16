@@ -4,6 +4,7 @@ import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -53,8 +54,8 @@ public class IssueListFragment extends LifecycleFragment {
     }
 
 
-    public void onViewCreated(View v, Bundle savedInstanceState) {
-        super.onViewCreated(v, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         mRootViewModel.getApiIssueResponse().observe(this, apiResponse -> {
             if (apiResponse != null) {
@@ -134,6 +135,7 @@ public class IssueListFragment extends LifecycleFragment {
 
 
     private void handleResponse(List<IssueDataModel> elements) {
+        Log.e("STEFANO","elementi n."+String.valueOf(elements.size()));
             this.cache = elements;
             mAdapter.clearIssues();
             mAdapter.addIssues(elements);

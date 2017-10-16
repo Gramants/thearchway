@@ -52,8 +52,9 @@ public class IssueRepositoryImpl implements IssueRepository {
 
                 if (response.isSuccessful()) {
                     ArrayList<IssueDataModel> transformed=IssueTranslator(response);
+                    //SPOSTARE DA QUI!!!!
                     deleteTableAndSaveDataToLocal(transformed);
-                    liveDataResult.setValue(transformed);
+                    //liveDataResult.setValue(transformed);
                 }
                 else
                 {

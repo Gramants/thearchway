@@ -27,6 +27,6 @@ public interface ContributorDao {
   void deleteById(int id);
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insert(ContributorDataModel contributor);
+  void insert(List<ContributorDataModel> contributor);
 
 }

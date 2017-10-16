@@ -36,8 +36,8 @@ public class FragmentDetail extends LifecycleFragment {
 
 
 
-    public void onViewCreated(View v, Bundle savedInstanceState) {
-        super.onViewCreated(v, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         subscribeFragmentObservers();
     }
     

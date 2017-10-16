@@ -95,6 +95,8 @@ public class RootViewModel extends AndroidViewModel {
 
 
     public LiveData<List<ContributorDataModel>> loadContributor(@NonNull String user, String repo, Boolean forceremote) {
+        Log.e("STEFANO","loadContributor");
+
         mApiIssueResponse.addSource(
                 mContributorRepository.getContributors(user, repo, forceremote),
                 apiContributorResponse -> mApiContributorResponse.setValue(apiContributorResponse)
@@ -107,6 +109,7 @@ public class RootViewModel extends AndroidViewModel {
 
         if ((searchstring!=null)&&(fromremote))
         {
+            Log.e("STEFANO","salvo "+searchstring);
             // save only if not null and from remote
             mPersistentStorageProxy.setSearchString(searchstring);
         }

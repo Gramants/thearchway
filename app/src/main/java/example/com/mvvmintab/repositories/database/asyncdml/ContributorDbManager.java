@@ -1,6 +1,7 @@
 package example.com.mvvmintab.repositories.database.asyncdml;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +26,7 @@ public class ContributorDbManager {
         @Override
         protected Void doInBackground(List<ContributorDataModel>... contributors) {
             db.contributorDao().deleteAll();
-            List<ContributorDataModel> results = new ArrayList<ContributorDataModel>();
-            results=contributors[0];
-            for (ContributorDataModel contributor : results) {
-                db.contributorDao().insert(contributor);
-            }
+            db.contributorDao().insert(contributors[0]);
             return null;
 
         }
