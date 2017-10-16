@@ -38,43 +38,20 @@ public class FragmentDetail extends LifecycleFragment {
 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        subscribeFragmentObservers();
-    }
-    
-    
-    private void subscribeFragmentObservers() {
 
-        mInterFragmentsViewModel.getIssueDetail().observe((LifecycleOwner) getActivity(),
-                new Observer<IssueDataModel>() {
-                    @Override
-                    public void onChanged(@Nullable IssueDataModel item) {
-                        if (item != null) {
-                            mFragmentDetailBinding.setIssue(item);
-                        }
-                    }
+        mInterFragmentsViewModel.getIssueDetail().observe(this, resource -> {
+            {
+            mFragmentDetailBinding.setIssue(resource);
+            mFragmentDetailBinding.executePendingBindings();
+            }
         });
 
-
-        mInterFragmentsViewModel.getIssueContent().observe((LifecycleOwner) getActivity(),
-                new Observer<IssueDataModel>() {
-                    @Override
-                    public void onChanged(@Nullable IssueDataModel item) {
-                        if (item != null) {
-                            mFragmentDetailBinding.setIssue(item);
-                        }
-                    }
-                });
-
-
-        mInterFragmentsViewModel.getContributorContent().observe((LifecycleOwner) getActivity(),
-                new Observer<ContributorDataModel>() {
-                    @Override
-                    public void onChanged(@Nullable ContributorDataModel item) {
-                        if (item != null) {
-                            mFragmentDetailBinding.setContributor(item);
-                        }
-                    }
-                });
+        mInterFragmentsViewModel.getContributorContent().observe(this, resource -> {
+            {
+                mFragmentDetailBinding.setContributor(resource);
+                mFragmentDetailBinding.executePendingBindings();
+            }
+        });
 
     }
 

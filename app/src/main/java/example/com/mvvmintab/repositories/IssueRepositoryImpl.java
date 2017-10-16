@@ -77,7 +77,6 @@ public class IssueRepositoryImpl implements IssueRepository {
         else
         {
 
-            Log.e("STEFANO","sono qui");
             return issueDao.getAllIssue();
 
         }

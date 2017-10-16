@@ -56,8 +56,6 @@ public class RootViewModel extends AndroidViewModel {
     }
 
 
-    // operation of Issue data
-
     @NonNull
     public LiveData<List<IssueDataModel>> getApiIssueResponse() {
         return mApiIssueResponse;
@@ -76,9 +74,9 @@ public class RootViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<IssueDataModel>> loadIssues(String user, String repo, Boolean forceremote) {
-        fromremote=forceremote;
+        this.fromremote=forceremote;
         if ( (user!=null)&&(repo!=null))
-            searchstring=user+"/"+repo;
+        {searchstring=user+"/"+repo;}
 
         mApiIssueResponse.addSource(
                 mIssueRepository.getIssues(user, repo, forceremote),
@@ -95,7 +93,6 @@ public class RootViewModel extends AndroidViewModel {
 
 
     public LiveData<List<ContributorDataModel>> loadContributor(@NonNull String user, String repo, Boolean forceremote) {
-        Log.e("STEFANO","loadContributor");
 
         mApiIssueResponse.addSource(
                 mContributorRepository.getContributors(user, repo, forceremote),
@@ -106,13 +103,8 @@ public class RootViewModel extends AndroidViewModel {
 
 
     public void saveSearchString() {
-
         if ((searchstring!=null)&&(fromremote))
-        {
-            Log.e("STEFANO","salvo "+searchstring);
-            // save only if not null and from remote
-            mPersistentStorageProxy.setSearchString(searchstring);
-        }
+        {mPersistentStorageProxy.setSearchString(searchstring);}
     }
 
     public LiveData<String> getSearchString() {

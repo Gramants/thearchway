@@ -57,20 +57,25 @@ public class IssueListFragment extends LifecycleFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mRootViewModel.getApiIssueResponse().observe(this, apiResponse -> {
-            if (apiResponse != null) {
-                if (apiResponse.size() > 0) {
-                    handleResponse(apiResponse);
-                    mRootViewModel.saveSearchString();
-                }
-            }
-            marker_progress.setVisibility(View.INVISIBLE);
 
-        });
+        mRootViewModel.getApiIssueResponse().observe(this,
+                apiResponse -> {handleResponse(apiResponse);}
+        );
 
         mRootViewModel.getContributorNetworkErrorResponse().observe(this, networkError -> {
             manageNetworkError(networkError);
         });
+
+
+        mRootViewModel.getShowDialogIssueAndContributor().observe(this, showDialog -> {
+            marker_progress.setVisibility(showDialog ? View.VISIBLE : View.INVISIBLE);
+        });
+
+        mRootViewModel.getIssueNetworkErrorResponse().observe(this, networkError -> {
+            marker_progress.setVisibility(View.INVISIBLE);
+            manageNetworkError(networkError);
+        });
+
 
         mRecyclerView.setRecycledViewPool(new RecyclerView.RecycledViewPool());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(
@@ -86,14 +91,6 @@ public class IssueListFragment extends LifecycleFragment {
         mRecyclerView.setAdapter(mAdapter);
 
 
-        mRootViewModel.getShowDialogIssueAndContributor().observe(this, showDialog -> {
-            marker_progress.setVisibility(showDialog ? View.VISIBLE : View.INVISIBLE);
-        });
-
-        mRootViewModel.getIssueNetworkErrorResponse().observe(this, networkError -> {
-            marker_progress.setVisibility(View.INVISIBLE);
-            manageNetworkError(networkError);
-        });
 
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
@@ -135,12 +132,12 @@ public class IssueListFragment extends LifecycleFragment {
 
 
     private void handleResponse(List<IssueDataModel> elements) {
-        Log.e("STEFANO","elementi n."+String.valueOf(elements.size()));
             this.cache = elements;
             mAdapter.clearIssues();
             mAdapter.addIssues(elements);
             marker_progress.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
+            mRootViewModel.saveSearchString();
     }
 
 

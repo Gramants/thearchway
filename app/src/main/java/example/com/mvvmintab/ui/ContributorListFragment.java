@@ -52,18 +52,11 @@ public class ContributorListFragment extends LifecycleFragment {
     }
 
 
+
+
+
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mRootViewModel.getApiContributorResponse().observe(this, apiResponse -> {
-            if (apiResponse != null) {
-                if (apiResponse.size()>0)
-                {
-                    handleResponse(apiResponse);
-                }
-            }
-            marker_progress.setVisibility(View.INVISIBLE);
-
-        });
 
 
 
@@ -82,10 +75,15 @@ public class ContributorListFragment extends LifecycleFragment {
         mRecyclerView.setAdapter(mAdapter);
 
 
+
+        mRootViewModel.getApiContributorResponse().observe(this,
+                apiResponse -> {handleResponse(apiResponse);}
+        );
+
+
         mRootViewModel.getShowDialogIssueAndContributor().observe(this, showDialog -> {
             marker_progress.setVisibility(showDialog ? View.VISIBLE : View.INVISIBLE);
         });
-
 
         mRootViewModel.getContributorNetworkErrorResponse().observe(this, networkError -> {
             marker_progress.setVisibility(View.INVISIBLE);
@@ -109,7 +107,6 @@ public class ContributorListFragment extends LifecycleFragment {
 
 
     private void handleResponse(List<ContributorDataModel> elements) {
-        Log.e("STEFANO","lista contributors "+String.valueOf(elements.size()));
             this.cache=elements;
             mAdapter.clearContributors();
             mAdapter.addContributors(elements);
