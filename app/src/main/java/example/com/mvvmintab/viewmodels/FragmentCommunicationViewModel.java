@@ -16,7 +16,7 @@ import example.com.mvvmintab.repositories.ContributorRepository;
 import example.com.mvvmintab.repositories.IssueRepository;
 
 
-public class InterFragmentsViewModel extends AndroidViewModel {
+public class FragmentCommunicationViewModel extends AndroidViewModel {
 
     private MediatorLiveData<IssueDataModel> mIssueDetail;
     final MutableLiveData<IssueDataModel> liveDataShowIssueContent= new MutableLiveData<>();
@@ -28,15 +28,12 @@ public class InterFragmentsViewModel extends AndroidViewModel {
     @Inject
     ContributorRepository mContributorRepository;
 
-    public InterFragmentsViewModel(Application application) {
+    public FragmentCommunicationViewModel(Application application) {
         super(application);
         mIssueDetail = new MediatorLiveData<>();
         ((App) application).getAppRepositoryComponent().inject(this);
 
     }
-
-
-
 
 
     @NonNull
@@ -46,7 +43,6 @@ public class InterFragmentsViewModel extends AndroidViewModel {
 
 
     public LiveData<IssueDataModel> loadIssue(int id) {
-        // https://stackoverflow.com/questions/45679896/android-mediatorlivedata-observer
         mIssueDetail.addSource(
                 mIssueRepository.getIssueFromDb(id),
                 dbResponse -> mIssueDetail.setValue(dbResponse)

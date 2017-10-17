@@ -3,9 +3,7 @@ package example.com.mvvmintab.ui;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,14 +24,17 @@ import example.com.mvvmintab.adapters.IssueDataAdapter;
 import example.com.mvvmintab.adapters.RecyclerItemClickListener;
 import example.com.mvvmintab.entities.IssueDataModel;
 import example.com.mvvmintab.entities.NetworkErrorObject;
-import example.com.mvvmintab.viewmodels.InterFragmentsViewModel;
-import example.com.mvvmintab.viewmodels.RootViewModel;
+import example.com.mvvmintab.viewmodels.FragmentCommunicationViewModel;
+import example.com.mvvmintab.viewmodels.RepositoryViewModel;
+import example.com.mvvmintab.viewmodels.UtilityViewModel;
 
 
 public class IssueListFragment extends LifecycleFragment {
     int color;
-    private RootViewModel mRootViewModel;
-    private InterFragmentsViewModel mInterFragmentsViewModel;
+    private RepositoryViewModel mRepositoryViewModel;
+    private FragmentCommunicationViewModel mFragmentCommunicationViewModel;
+    private UtilityViewModel mUtilityViewModel;
+
 
     private RecyclerView mRecyclerView;
     private IssueDataAdapter mAdapter;
@@ -48,8 +49,6 @@ public class IssueListFragment extends LifecycleFragment {
         relativeLayout.setBackgroundColor(color);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         marker_progress = (ProgressBar) view.findViewById(R.id.marker_progress);
-        mRootViewModel = ViewModelProviders.of(getActivity()).get(RootViewModel.class);
-        mInterFragmentsViewModel = ViewModelProviders.of(getActivity()).get(InterFragmentsViewModel.class);
         return view;
     }
 
@@ -57,21 +56,24 @@ public class IssueListFragment extends LifecycleFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mRepositoryViewModel = ViewModelProviders.of(getActivity()).get(RepositoryViewModel.class);
+        mFragmentCommunicationViewModel = ViewModelProviders.of(getActivity()).get(FragmentCommunicationViewModel.class);
+        mUtilityViewModel = ViewModelProviders.of(getActivity()).get(UtilityViewModel.class);
 
-        mRootViewModel.getApiIssueResponse().observe(this,
+        mRepositoryViewModel.getApiIssueResponse().observe(this,
                 apiResponse -> {handleResponse(apiResponse);}
         );
 
-        mRootViewModel.getContributorNetworkErrorResponse().observe(this, networkError -> {
+        mRepositoryViewModel.getContributorNetworkErrorResponse().observe(this, networkError -> {
             manageNetworkError(networkError);
         });
 
 
-        mRootViewModel.getShowDialogIssueAndContributor().observe(this, showDialog -> {
+        mUtilityViewModel.getShowDialogIssueAndContributor().observe(this, showDialog -> {
             marker_progress.setVisibility(showDialog ? View.VISIBLE : View.INVISIBLE);
         });
 
-        mRootViewModel.getIssueNetworkErrorResponse().observe(this, networkError -> {
+        mRepositoryViewModel.getIssueNetworkErrorResponse().observe(this, networkError -> {
             marker_progress.setVisibility(View.INVISIBLE);
             manageNetworkError(networkError);
         });
@@ -96,15 +98,15 @@ public class IssueListFragment extends LifecycleFragment {
                 new RecyclerItemClickListener(getActivity(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        mInterFragmentsViewModel.loadIssue(((IssueDataModel) cache.get(position)).getId());
-                        mRootViewModel.setSnackBar("Body opened in Detail by reading the database");
+                        mFragmentCommunicationViewModel.loadIssue(((IssueDataModel) cache.get(position)).getId());
+                        mUtilityViewModel.setSnackBar("Body opened in Detail by reading the database");
                     }
 
                     @Override
                     public void onLongItemClick(View view, int position) {
 
-                        mRootViewModel.deleteIssueRecordById(((IssueDataModel) cache.get(position)).getId());
-                        mRootViewModel.setSnackBar("Record deleted and NOT OPENED in Detail tab");
+                        mRepositoryViewModel.deleteIssueRecordById(((IssueDataModel) cache.get(position)).getId());
+                        mUtilityViewModel.setSnackBar("Record deleted and NOT OPENED in Detail tab");
 
                     }
                 })
@@ -119,9 +121,9 @@ public class IssueListFragment extends LifecycleFragment {
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
                 final int position = viewHolder.getAdapterPosition(); //swiped position
-                mInterFragmentsViewModel.showIssueContent((IssueDataModel) cache.get(position));
-                mRootViewModel.deleteIssueRecordById(((IssueDataModel) cache.get(position)).getId());
-                mRootViewModel.setSnackBar("Record opened in Detail tab passing the object and deleted");
+                mFragmentCommunicationViewModel.showIssueContent((IssueDataModel) cache.get(position));
+                mRepositoryViewModel.deleteIssueRecordById(((IssueDataModel) cache.get(position)).getId());
+                mUtilityViewModel.setSnackBar("Record opened in Detail tab passing the object and deleted");
 
             }
         };
@@ -137,7 +139,8 @@ public class IssueListFragment extends LifecycleFragment {
             mAdapter.addIssues(elements);
             marker_progress.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
-            mRootViewModel.saveSearchString();
+            mUtilityViewModel.swapSearchString();
+
     }
 
 

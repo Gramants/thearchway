@@ -25,30 +25,20 @@ import example.com.mvvmintab.repositories.api.checknetwork.CheckNetwork;
 import example.com.mvvmintab.repositories.preferences.PersistentStorageProxy;
 
 
-public class RootViewModel extends AndroidViewModel {
+public class RepositoryViewModel extends AndroidViewModel {
 
     private MediatorLiveData<List<IssueDataModel>> mApiIssueResponse;
     private MediatorLiveData<List<ContributorDataModel>> mApiContributorResponse;
-    final MutableLiveData<Boolean> liveDataShowDialogIssueAndContributor = new MutableLiveData<>();
-    final MutableLiveData<String> livedatasavedstring = new MutableLiveData<>();
-    final MutableLiveData<String> livedatasnackbar = new MutableLiveData<>();
-    final MutableLiveData<Boolean> liveDataIsInternetConnected = new MutableLiveData<>();
-    private String searchstring;
-    private Boolean fromremote;
+
+
     @Inject
     IssueRepository mIssueRepository;
 
     @Inject
     ContributorRepository mContributorRepository;
 
-    @Inject
-    PersistentStorageProxy mPersistentStorageProxy;
 
-    @Inject
-    CheckNetwork mCheckNetwork;
-
-
-    public RootViewModel(Application application) {
+    public RepositoryViewModel(Application application) {
         super(application);
         mApiIssueResponse = new MediatorLiveData<>();
         mApiContributorResponse = new MediatorLiveData<>();
@@ -74,9 +64,6 @@ public class RootViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<IssueDataModel>> loadIssues(String user, String repo, Boolean forceremote) {
-        this.fromremote=forceremote;
-        if ( (user!=null)&&(repo!=null))
-        {searchstring=user+"/"+repo;}
 
         mApiIssueResponse.addSource(
                 mIssueRepository.getIssues(user, repo, forceremote),
@@ -101,43 +88,6 @@ public class RootViewModel extends AndroidViewModel {
         return mApiContributorResponse;
     }
 
-
-    public void saveSearchString() {
-        if ((searchstring!=null)&&(fromremote))
-        {mPersistentStorageProxy.setSearchString(searchstring);}
-    }
-
-    public LiveData<String> getSearchString() {
-        livedatasavedstring.setValue(mPersistentStorageProxy.getSearchString());
-        return livedatasavedstring;
-    }
-
-
-    public MutableLiveData<String> getSnackBar() {
-        return livedatasnackbar;
-    }
-
-    public void setSnackBar(String msg) {
-        livedatasnackbar.setValue(msg);
-    }
-
-    public MutableLiveData<Boolean> getShowDialogIssueAndContributor() {
-        return liveDataShowDialogIssueAndContributor;
-    }
-
-    public void setShowDialogIssueAndContributor(Boolean visible) {
-        liveDataShowDialogIssueAndContributor.setValue(visible);
-    }
-
-
-
-    public void askNetWork() {
-        liveDataIsInternetConnected.setValue(mCheckNetwork.isConnectedToInternet());
-    }
-
-    public MutableLiveData<Boolean> isInternetConnected() {
-        return liveDataIsInternetConnected;
-    }
 
 
 }

@@ -23,20 +23,22 @@ import example.com.mvvmintab.adapters.ContributorDataAdapter;
 import example.com.mvvmintab.adapters.RecyclerItemClickListener;
 import example.com.mvvmintab.entities.ContributorDataModel;
 import example.com.mvvmintab.entities.NetworkErrorObject;
-import example.com.mvvmintab.viewmodels.InterFragmentsViewModel;
-import example.com.mvvmintab.viewmodels.RootViewModel;
+import example.com.mvvmintab.viewmodels.FragmentCommunicationViewModel;
+import example.com.mvvmintab.viewmodels.RepositoryViewModel;
+import example.com.mvvmintab.viewmodels.UtilityViewModel;
 
 
 public class ContributorListFragment extends LifecycleFragment {
     int color;
-    private RootViewModel mRootViewModel;
-
+    private RepositoryViewModel mRepositoryViewModel;
+    private FragmentCommunicationViewModel mFragmentCommunicationViewModel;
+    private UtilityViewModel mUtilityViewModel;
 
     private RecyclerView mRecyclerView;
     private ContributorDataAdapter mAdapter;
     private ProgressBar marker_progress;
 
-    private InterFragmentsViewModel mInterFragmentsViewModel;
+
     private List<ContributorDataModel> cache;
 
     @Override
@@ -46,18 +48,6 @@ public class ContributorListFragment extends LifecycleFragment {
         relativeLayout.setBackgroundColor(color);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         marker_progress = (ProgressBar) view.findViewById(R.id.marker_progress);
-        mRootViewModel = ViewModelProviders.of(getActivity()).get(RootViewModel.class);
-        mInterFragmentsViewModel = ViewModelProviders.of(getActivity()).get(InterFragmentsViewModel.class);
-        return view;
-    }
-
-
-
-
-
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
 
 
 
@@ -74,28 +64,12 @@ public class ContributorListFragment extends LifecycleFragment {
         mAdapter = new ContributorDataAdapter(getLayoutInflater());
         mRecyclerView.setAdapter(mAdapter);
 
-
-
-        mRootViewModel.getApiContributorResponse().observe(this,
-                apiResponse -> {handleResponse(apiResponse);}
-        );
-
-
-        mRootViewModel.getShowDialogIssueAndContributor().observe(this, showDialog -> {
-            marker_progress.setVisibility(showDialog ? View.VISIBLE : View.INVISIBLE);
-        });
-
-        mRootViewModel.getContributorNetworkErrorResponse().observe(this, networkError -> {
-            marker_progress.setVisibility(View.INVISIBLE);
-            manageNetworkError(networkError);
-        });
-
-;
+        ;
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        mInterFragmentsViewModel.showContributorContent( (ContributorDataModel) cache.get(position));
-                        mRootViewModel.setSnackBar("Contributor name added to Detail tab");
+                        mFragmentCommunicationViewModel.showContributorContent( (ContributorDataModel) cache.get(position));
+                        mUtilityViewModel.setSnackBar("Contributor name added to Detail tab");
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
@@ -103,6 +77,39 @@ public class ContributorListFragment extends LifecycleFragment {
                     }
                 })
         );
+
+        return view;
+    }
+
+
+
+
+
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mRepositoryViewModel = ViewModelProviders.of(getActivity()).get(RepositoryViewModel.class);
+        mFragmentCommunicationViewModel = ViewModelProviders.of(getActivity()).get(FragmentCommunicationViewModel.class);
+        mUtilityViewModel = ViewModelProviders.of(getActivity()).get(UtilityViewModel.class);
+
+
+
+
+        mRepositoryViewModel.getApiContributorResponse().observe(this,
+                apiResponse -> {handleResponse(apiResponse);}
+        );
+
+
+        mUtilityViewModel.getShowDialogIssueAndContributor().observe(this, showDialog -> {
+            marker_progress.setVisibility(showDialog ? View.VISIBLE : View.INVISIBLE);
+        });
+
+        mRepositoryViewModel.getContributorNetworkErrorResponse().observe(this, networkError -> {
+            marker_progress.setVisibility(View.INVISIBLE);
+            manageNetworkError(networkError);
+        });
+
+
     }
 
 

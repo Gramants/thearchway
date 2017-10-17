@@ -23,13 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import example.com.mvvmintab.R;
-import example.com.mvvmintab.entities.IssueDataModel;
 import example.com.mvvmintab.entities.NetworkErrorObject;
-import example.com.mvvmintab.viewmodels.RootViewModel;
+import example.com.mvvmintab.viewmodels.RepositoryViewModel;
+import example.com.mvvmintab.viewmodels.UtilityViewModel;
 
 public class ViewPagerActivity extends LifecycleActivity {
 
-    private RootViewModel mViewModel;
+    private RepositoryViewModel mRepositoryViewModel;
+    private UtilityViewModel mUtilityViewModel;
+
     private SearchView searchview;
     private ProgressDialog mDialog;
     private CoordinatorLayout mCoordinator;
@@ -38,7 +40,10 @@ public class ViewPagerActivity extends LifecycleActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed);
-        mViewModel = ViewModelProviders.of(this).get(RootViewModel.class);
+
+        mRepositoryViewModel = ViewModelProviders.of(this).get(RepositoryViewModel.class);
+        mUtilityViewModel = ViewModelProviders.of(this).get(UtilityViewModel.class);
+
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setActionBar(toolbar);
         if (getActionBar() != null) getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -51,43 +56,12 @@ public class ViewPagerActivity extends LifecycleActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabanim_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-
-                viewPager.setCurrentItem(tab.getPosition());
-
-                switch (tab.getPosition()) {
-                    case 0:
-                        //showToast("One");
-                        break;
-                    case 1:
-                        //showToast("Two");
-                        break;
-                    case 2:
-                        //showToast("Three");
-                        break;
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-
 
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String repo) {
                         mSearchString=repo;
-                        mViewModel.askNetWork();
+                        mUtilityViewModel.askNetWork();
                         return false;
             }
 
@@ -100,26 +74,26 @@ public class ViewPagerActivity extends LifecycleActivity {
 
 
 
-        mViewModel.getSearchString().observe(this, searchString -> {
+        mUtilityViewModel.getSearchString().observe(this, searchString -> {
             searchview.setIconified(false);
             searchview.setQuery(new String(searchString),false);
 
         });
 
 
-        mViewModel.isInternetConnected().observe(this, isConnected -> {
+        mUtilityViewModel.isInternetConnected().observe(this, isConnected -> {
             manageSearch(isConnected);
         });
 
-        mViewModel.getIssueNetworkErrorResponse().observe(this, networkError -> {
+        mRepositoryViewModel.getIssueNetworkErrorResponse().observe(this, networkError -> {
             manageNetworkError(networkError);
         });
 
-        mViewModel.getContributorNetworkErrorResponse().observe(this, networkError -> {
+        mRepositoryViewModel.getContributorNetworkErrorResponse().observe(this, networkError -> {
             manageNetworkError(networkError);
         });
 
-        mViewModel.getSnackBar().observe(this, snackMsg -> {
+        mUtilityViewModel.getSnackBar().observe(this, snackMsg -> {
             handleError(snackMsg);
         });
 
@@ -205,13 +179,13 @@ public class ViewPagerActivity extends LifecycleActivity {
     }
 
     private void getLocalDataIfAny() {
-        mViewModel.loadIssues(null, null,false);
-        mViewModel.loadContributor(null, null,false);
+        mRepositoryViewModel.loadIssues(null, null,false);
+        mRepositoryViewModel.loadContributor(null, null,false);
     }
 
 
     private void handleError(String snackMsg) {
-        mViewModel.setShowDialogIssueAndContributor(false);
+        mUtilityViewModel.setShowDialogIssueAndContributor(false);
         searchview.clearFocus();
         Snackbar snackbar = Snackbar.make(mCoordinator, snackMsg, Snackbar.LENGTH_LONG);
         snackbar.show();
@@ -225,10 +199,10 @@ public class ViewPagerActivity extends LifecycleActivity {
         if (mSearchString.length() > 0) {
         String[] query = mSearchString.split("/");
         if (query.length == 2) {
-            mViewModel.setShowDialogIssueAndContributor(true);
-            //mViewModel.setDialogTab2(true);
-            mViewModel.loadIssues(query[0], query[1],true);
-            mViewModel.loadContributor(query[0], query[1],true);
+            mUtilityViewModel.setShowDialogIssueAndContributor(true);
+            mRepositoryViewModel.loadIssues(query[0], query[1],true);
+            mRepositoryViewModel.loadContributor(query[0], query[1],true);
+            mUtilityViewModel.saveSearchStringTemp(query[0]+"/"+query[1]);
             searchview.clearFocus();
         } else {
             handleError("Error wrong format of input. Required format owner/repository_name");

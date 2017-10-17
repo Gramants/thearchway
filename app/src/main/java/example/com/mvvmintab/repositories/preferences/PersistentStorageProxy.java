@@ -5,6 +5,11 @@ package example.com.mvvmintab.repositories.preferences;
  */
 
 public interface PersistentStorageProxy {
-        String getSearchString();
-        void setSearchString(String searchString);
+    String getSearchString();
+
+    void setSearchString(String searchString);
+
+    String getSearchStringTemp();
+
+    void setSearchStringTemp(String searchString);
 }

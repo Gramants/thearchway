@@ -3,8 +3,6 @@ package example.com.mvvmintab.ui;
 
 
 import android.arch.lifecycle.LifecycleFragment;
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -16,19 +14,17 @@ import android.view.ViewGroup;
 
 import example.com.mvvmintab.R;
 import example.com.mvvmintab.databinding.FragmentDetailBinding;
-import example.com.mvvmintab.entities.ContributorDataModel;
-import example.com.mvvmintab.entities.IssueDataModel;
-import example.com.mvvmintab.viewmodels.InterFragmentsViewModel;
+import example.com.mvvmintab.viewmodels.FragmentCommunicationViewModel;
 
 public class FragmentDetail extends LifecycleFragment {
 
 
-    private InterFragmentsViewModel mInterFragmentsViewModel;
+    private FragmentCommunicationViewModel mFragmentCommunicationViewModel;
     private FragmentDetailBinding mFragmentDetailBinding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mInterFragmentsViewModel = ViewModelProviders.of(getActivity()).get(InterFragmentsViewModel.class);
+        mFragmentCommunicationViewModel = ViewModelProviders.of(getActivity()).get(FragmentCommunicationViewModel.class);
         mFragmentDetailBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false);
         return mFragmentDetailBinding.getRoot();
     }
@@ -39,20 +35,25 @@ public class FragmentDetail extends LifecycleFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mInterFragmentsViewModel.getIssueDetail().observe(this, resource -> {
+        mFragmentCommunicationViewModel.getIssueDetail().observe(this, resource -> {
             {
             mFragmentDetailBinding.setIssue(resource);
             mFragmentDetailBinding.executePendingBindings();
             }
         });
 
-        mInterFragmentsViewModel.getContributorContent().observe(this, resource -> {
+        mFragmentCommunicationViewModel.getContributorContent().observe(this, resource -> {
             {
                 mFragmentDetailBinding.setContributor(resource);
                 mFragmentDetailBinding.executePendingBindings();
             }
         });
-
+        mFragmentCommunicationViewModel.getIssueContent().observe(this, resource -> {
+            {
+                mFragmentDetailBinding.setIssue(resource);
+                mFragmentDetailBinding.executePendingBindings();
+            }
+        });
     }
 
 
