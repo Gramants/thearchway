@@ -25,16 +25,10 @@ public class DataTranslator {
     }
 
     public static ArrayList<ContributorDataModel> ContributorTranslator(Response<List<Contributor>> response) {
-
         ArrayList<ContributorDataModel> transformed = new ArrayList();
-        if (response.isSuccessful()) {
             for (Contributor listitem : response.body()) {
-                transformed.add(new ContributorDataModel(listitem.getId(), listitem.getLogin(), listitem.getHtml_url(), ""));
+                transformed.add(new ContributorDataModel(listitem.getId(), listitem.getLogin(), listitem.getHtml_url()));
             }
-        } else {
-            transformed.add(new ContributorDataModel(-1, "", "", response.message()));
-        }
-
         return transformed;
     }
 

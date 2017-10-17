@@ -51,14 +51,10 @@ public class ContributorRepositoryImpl implements ContributorRepository {
             public void onResponse(Call<List<Contributor>> call, Response<List<Contributor>> response) {
 
                 if (response.isSuccessful()) {
-                    ArrayList<ContributorDataModel> transformed=new ArrayList();
-                    transformed=ContributorTranslator(response);
-                    deleteTableAndSaveDataToLocal(transformed);
-                    //liveDataResult.setValue(transformed);
+                    deleteTableAndSaveDataToLocal(ContributorTranslator(response));
                 }
                 else
                 {
-                    //REST ERROR
                     liveDataError.setValue(new NetworkErrorObject(response.code(),response.message() , Config.CONTRIBUTOR_ENDPOINT));
                 }
 
@@ -77,7 +73,7 @@ public class ContributorRepositoryImpl implements ContributorRepository {
         }
         else
         {
-            // pick from the DB
+            // the last saved loaded at the startup
             return contributorDao.getAllContributors();
 
         }

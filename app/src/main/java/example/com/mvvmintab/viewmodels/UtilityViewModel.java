@@ -6,6 +6,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.List;
 
@@ -43,13 +45,24 @@ public class UtilityViewModel extends AndroidViewModel {
 
 
     public void swapSearchString() {
-        mPersistentStorageProxy.setSearchString(mPersistentStorageProxy.getSearchStringTemp());
-        mPersistentStorageProxy.setSearchStringTemp("");
+        if (!TextUtils.isEmpty(mPersistentStorageProxy.getSearchStringTemp()))
+        {
+            Log.e("STEFANO","savedin good var "+mPersistentStorageProxy.getSearchStringTemp());
+            mPersistentStorageProxy.setSearchString(mPersistentStorageProxy.getSearchStringTemp());
+            mPersistentStorageProxy.setSearchStringTemp("");
+        }
     }
 
     public LiveData<String> getSearchString() {
+        Log.e("STEFANO","streamed"+mPersistentStorageProxy.getSearchString());
         livedatasavedstring.setValue(mPersistentStorageProxy.getSearchString());
         return livedatasavedstring;
+    }
+
+
+    public void saveSearchStringTemp(String searchstring) {
+        Log.e("STEFANO","saved"+searchstring);
+        mPersistentStorageProxy.setSearchStringTemp(searchstring);
     }
 
 
@@ -80,7 +93,4 @@ public class UtilityViewModel extends AndroidViewModel {
     }
 
 
-    public void saveSearchStringTemp(String searchstring) {
-        mPersistentStorageProxy.setSearchString(searchstring);
-    }
 }

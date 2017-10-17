@@ -134,12 +134,16 @@ public class IssueListFragment extends LifecycleFragment {
 
 
     private void handleResponse(List<IssueDataModel> elements) {
+            if (!elements.isEmpty())
+            {
             this.cache = elements;
             mAdapter.clearIssues();
             mAdapter.addIssues(elements);
             marker_progress.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
             mUtilityViewModel.swapSearchString();
+             Log.e("STEFANO","handleResponse ");
+            }
 
     }
 

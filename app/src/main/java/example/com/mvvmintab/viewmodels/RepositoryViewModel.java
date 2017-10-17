@@ -69,6 +69,8 @@ public class RepositoryViewModel extends AndroidViewModel {
                 mIssueRepository.getIssues(user, repo, forceremote),
                 apiIssueResponse -> mApiIssueResponse.setValue(apiIssueResponse)
         );
+
+        Log.e("STEFANO","loadIssues "+String.valueOf(forceremote));
         return mApiIssueResponse;
     }
 

@@ -51,14 +51,10 @@ public class IssueRepositoryImpl implements IssueRepository {
             public void onResponse(Call<List<Issue>> call, Response<List<Issue>> response) {
 
                 if (response.isSuccessful()) {
-                    ArrayList<IssueDataModel> transformed=IssueTranslator(response);
-                    //SPOSTARE DA QUI!!!!
-                    deleteTableAndSaveDataToLocal(transformed);
-                    //liveDataResult.setValue(transformed);
+                    deleteTableAndSaveDataToLocal(IssueTranslator(response));
                 }
                 else
                 {
-                 //REST ERROR
                  liveDataError.setValue(new NetworkErrorObject(response.code(),response.message(), Config.ISSUE_ENDPOINT));
                 }
 
@@ -66,17 +62,17 @@ public class IssueRepositoryImpl implements IssueRepository {
 
             @Override
             public void onFailure(Call<List<Issue>> call, Throwable t) {
-                // generic error
-                liveDataError.setValue(new NetworkErrorObject(0,"Unknown error", Config.ISSUE_ENDPOINT));
+                 liveDataError.setValue(new NetworkErrorObject(0,"Unknown error", Config.ISSUE_ENDPOINT));
             }
         });
 
-
+            Log.e("STEFANO","ritorno livedataresult network ");
             return liveDataResult;
         }
         else
         {
-
+            Log.e("STEFANO","ritorno livedataresult db");
+            // the last saved loaded at the startup
             return issueDao.getAllIssue();
 
         }
