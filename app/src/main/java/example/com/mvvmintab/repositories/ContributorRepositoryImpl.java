@@ -4,6 +4,7 @@ import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +14,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import example.com.mvvmintab.Config;
+import example.com.mvvmintab.Utils;
 import example.com.mvvmintab.entities.ContributorDataModel;
 import example.com.mvvmintab.entities.NetworkErrorObject;
 import example.com.mvvmintab.entities.pojos.Contributor;
@@ -85,28 +87,17 @@ public class ContributorRepositoryImpl implements ContributorRepository {
 
                                     ArrayList<ContributorDataModel> result=new ArrayList<>();
                                     for (ContributorDataModel customer : contributorDataModels) {
-                                        customer.setLogin(customer.getLogin()+" transformed");
+                                        customer.setLogin(customer.getLogin().trim().toUpperCase()+" transf. by switchmap");
                                         result.add(customer);
                                     }
-                                  Collections.sort(result, new CustomComparator());
+
+                                  Collections.sort(result, new Utils.CustomComparator());
                                   return getTransformedDbResult(result);
                                 }
                             });
-/*
-                                @Override
-                                public List<String> apply(List<Customer> customers) {
-                                    ArrayList<String> result=new ArrayList<>();
 
-                                    for (Customer customer : customers) {
-                                        result.add(customer.id);
-                                    }
 
-                                    return(result);
-                                }
-                            });
-*/
 
-            //return contributorDao.getAllContributors();
             return transformedDbOutput;
 
         }
@@ -123,12 +114,6 @@ public class ContributorRepositoryImpl implements ContributorRepository {
     }
 
 
-    public class CustomComparator implements Comparator<ContributorDataModel> {
-        @Override
-        public int compare(ContributorDataModel o1, ContributorDataModel o2) {
-            return o1.getLogin().compareTo(o2.getLogin());
-        }
-    }
 
 
     @Override

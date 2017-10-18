@@ -1,15 +1,19 @@
 package example.com.mvvmintab.repositories;
 
+import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.util.Log;
+import android.arch.lifecycle.Transformations;
+
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import example.com.mvvmintab.Config;
+import example.com.mvvmintab.Utils;
 import example.com.mvvmintab.entities.IssueDataModel;
 import example.com.mvvmintab.entities.NetworkErrorObject;
 import example.com.mvvmintab.entities.pojos.Issue;
@@ -43,42 +47,66 @@ public class IssueRepositoryImpl implements IssueRepository {
         final MutableLiveData<List<IssueDataModel>> liveDataResult = new MutableLiveData<>();
 
 
-        if (forceRemote)
-        {
-        Call<List<Issue>> call = mApiService.getIssues(owner, repo);
-        call.enqueue(new Callback<List<Issue>>() {
-            @Override
-            public void onResponse(Call<List<Issue>> call, Response<List<Issue>> response) {
+        if (forceRemote) {
+            Call<List<Issue>> call = mApiService.getIssues(owner, repo);
+            call.enqueue(new Callback<List<Issue>>() {
+                @Override
+                public void onResponse(Call<List<Issue>> call, Response<List<Issue>> response) {
 
-                if (response.isSuccessful()) {
-                    deleteTableAndSaveDataToLocal(IssueTranslator(response));
+                    if (response.isSuccessful()) {
+                        deleteTableAndSaveDataToLocal(IssueTranslator(response));
+                    } else {
+                        liveDataError.setValue(new NetworkErrorObject(response.code(), response.message(), Config.ISSUE_ENDPOINT));
+                    }
+
                 }
-                else
-                {
-                 liveDataError.setValue(new NetworkErrorObject(response.code(),response.message(), Config.ISSUE_ENDPOINT));
+
+                @Override
+                public void onFailure(Call<List<Issue>> call, Throwable t) {
+                    liveDataError.setValue(new NetworkErrorObject(0, "Unknown error", Config.ISSUE_ENDPOINT));
                 }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Issue>> call, Throwable t) {
-                 liveDataError.setValue(new NetworkErrorObject(0,"Unknown error", Config.ISSUE_ENDPOINT));
-            }
-        });
+            });
 
             return liveDataResult;
-        }
-        else
-        {
-            return issueDao.getAllIssue();
+        } else {
+
+            LiveData<List<IssueDataModel>> transformedDbOutput =
+                    Transformations.switchMap(issueDao.getAllIssue(),
+                            new Function<List<IssueDataModel>, LiveData<List<IssueDataModel>>>() {
+                                @Override
+                                public LiveData<List<IssueDataModel>> apply(List<IssueDataModel> issueDataModels) {
+
+                                    ArrayList<IssueDataModel> result = new ArrayList<>();
+                                    for (IssueDataModel issue : issueDataModels) {
+                                        issue.setTitle(issue.getTitle().trim().toUpperCase() + " ORDERED");
+                                        result.add(issue);
+                                    }
+                                    Collections.sort(result, new Utils.CustomComparator());
+                                    return getTransformedDbResult(result);
+                                }
+                            });
+
+            return transformedDbOutput;
+
 
         }
 
     }
 
-    @Override
-    public LiveData<NetworkErrorObject> getNetworkError() {return liveDataError;}
+    private LiveData<List<IssueDataModel>> getTransformedDbResult(List<IssueDataModel> result) {
+        return new LiveData<List<IssueDataModel>>() {
+            @Override
+            protected void onActive() {
+                setValue(result);
+            }
+        };
+    }
 
+
+    @Override
+    public LiveData<NetworkErrorObject> getNetworkError() {
+        return liveDataError;
+    }
 
 
     @Override
@@ -93,13 +121,9 @@ public class IssueRepositoryImpl implements IssueRepository {
     }
 
 
-
     private void deleteTableAndSaveDataToLocal(ArrayList<IssueDataModel> issues) {
         new IssueDbManager.AddIssueAsyncTask(mProjectDb).execute(issues);
     }
-
-
-
 
 
 }
