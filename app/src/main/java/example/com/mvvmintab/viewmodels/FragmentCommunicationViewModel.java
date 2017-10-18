@@ -8,12 +8,12 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import javax.inject.Inject;
 
 import example.com.mvvmintab.App;
 import example.com.mvvmintab.entities.ContributorDataModel;
+import example.com.mvvmintab.entities.ContributorTransformed;
 import example.com.mvvmintab.entities.IssueDataModel;
 import example.com.mvvmintab.repositories.ContributorRepository;
 import example.com.mvvmintab.repositories.IssueRepository;
@@ -23,7 +23,7 @@ public class FragmentCommunicationViewModel extends AndroidViewModel {
 
     private MediatorLiveData<IssueDataModel> mIssueDetail;
     final MutableLiveData<IssueDataModel> liveDataShowIssueContent= new MutableLiveData<>();
-    final MutableLiveData<ContributorDataModel> liveDataShowContributorContent= new MutableLiveData<>();
+    final MutableLiveData<ContributorDataModel> liveDataShowContributorContent= new MutableLiveData<ContributorDataModel>();
 
     @Inject
     IssueRepository mIssueRepository;
@@ -73,8 +73,19 @@ public class FragmentCommunicationViewModel extends AndroidViewModel {
 
     }
 
-    public MutableLiveData<ContributorDataModel> getContributorContent() {
-        return liveDataShowContributorContent;
+    public LiveData<ContributorTransformed> getContributorContent() {
+
+        return Transformations.map(liveDataShowContributorContent, new Function<ContributorDataModel, ContributorTransformed>() {
+            @Override
+            public ContributorTransformed apply(ContributorDataModel input) {
+                return new ContributorTransformed(input.getLogin()+" and transformed by map");
+            }
+
+        });
+
+
+
+
     }
     public void showContributorContent(ContributorDataModel contributorDataModel) {
         liveDataShowContributorContent.setValue(contributorDataModel);

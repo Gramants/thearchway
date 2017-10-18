@@ -1,7 +1,6 @@
 package example.com.mvvmintab.ui;
 
 
-
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
@@ -31,15 +30,13 @@ public class FragmentDetail extends LifecycleFragment {
     }
 
 
-
-
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         mFragmentCommunicationViewModel.getIssueDetail().observe(this, resource -> {
             {
-            mFragmentDetailBinding.setIssue(resource);
-            mFragmentDetailBinding.executePendingBindings();
+                mFragmentDetailBinding.setIssue(resource);
+                mFragmentDetailBinding.executePendingBindings();
             }
         });
 
