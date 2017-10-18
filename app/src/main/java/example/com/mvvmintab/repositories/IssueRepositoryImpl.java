@@ -86,6 +86,23 @@ public class IssueRepositoryImpl implements IssueRepository {
                                 }
                             });
 
+
+            LiveData<List<IssueDataModel>> transformedDbOutput2 =
+                    Transformations.switchMap(issueDao.getAllIssue(),
+                            new Function<List<IssueDataModel>, LiveData<List<IssueDataModel>>>() {
+                                @Override
+                                public LiveData<List<IssueDataModel>> apply(List<IssueDataModel> issueDataModels) {
+
+                                    ArrayList<IssueDataModel> result = new ArrayList<>();
+                                    for (IssueDataModel issue : issueDataModels) {
+                                        issue.setTitle(issue.getTitle().trim().toUpperCase() + " ORDERED");
+                                        result.add(issue);
+                                    }
+                                    Collections.sort(result, new Utils.CustomComparator());
+                                    return getTransformedDbResult(result);
+                                }
+                            });
+
             return transformedDbOutput;
 
 

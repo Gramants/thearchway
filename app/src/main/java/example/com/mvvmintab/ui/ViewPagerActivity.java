@@ -173,8 +173,7 @@ public class ViewPagerActivity extends LifecycleActivity {
     }
 
     private void getStoredData() {
-        mRepositoryViewModel.loadIssues(null, null, false);
-        mRepositoryViewModel.loadContributor(null, null, false);
+        mRepositoryViewModel.setQueryString(null,null,false);
         mUtilityViewModel.getSearchString();
     }
 
@@ -193,8 +192,7 @@ public class ViewPagerActivity extends LifecycleActivity {
             String[] query = mSearchString.split("/");
             if (query.length == 2) {
                 mUtilityViewModel.setShowDialogIssueAndContributor(true);
-                mRepositoryViewModel.loadIssues(query[0], query[1], true);
-                mRepositoryViewModel.loadContributor(query[0], query[1], true);
+                mRepositoryViewModel.setQueryString(query[0], query[1], true);
                 searchview.clearFocus();
             } else {
                 handleError("Error wrong format of input. Required format owner/repository_name");
