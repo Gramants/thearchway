@@ -1,11 +1,14 @@
 package example.com.mvvmintab.viewmodels;
 
 import android.app.Application;
+import android.arch.core.util.Function;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import javax.inject.Inject;
 
@@ -53,11 +56,21 @@ public class FragmentCommunicationViewModel extends AndroidViewModel {
 
 
 
-    public MutableLiveData<IssueDataModel> getIssueContent() {
-        return liveDataShowIssueContent;
+    public LiveData<IssueDataModel> getIssueContent() {
+
+        return Transformations.map(liveDataShowIssueContent, new Function<IssueDataModel, IssueDataModel>() {
+            @Override
+            public IssueDataModel apply(IssueDataModel input) {
+                input.setTitle(input.getTitle()+" !MAP transformed");
+                return input;
+            }
+        });
+
     }
     public void showIssueContent(IssueDataModel issueDataModel) {
+
         liveDataShowIssueContent.setValue(issueDataModel);
+
     }
 
     public MutableLiveData<ContributorDataModel> getContributorContent() {
