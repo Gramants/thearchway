@@ -50,7 +50,6 @@ public class ContributorListFragment extends LifecycleFragment {
         marker_progress = (ProgressBar) view.findViewById(R.id.marker_progress);
 
 
-
         mRecyclerView.setRecycledViewPool(new RecyclerView.RecycledViewPool());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(
                 getContext(), LinearLayoutManager.VERTICAL, false)
@@ -66,13 +65,15 @@ public class ContributorListFragment extends LifecycleFragment {
 
         ;
         mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-                        mFragmentCommunicationViewModel.showContributorContent( (ContributorDataModel) cache.get(position));
+                new RecyclerItemClickListener(getActivity(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        mFragmentCommunicationViewModel.showContributorContent((ContributorDataModel) cache.get(position));
                         mUtilityViewModel.setSnackBar("Contributor name added to Detail tab");
                     }
 
-                    @Override public void onLongItemClick(View view, int position) {
+                    @Override
+                    public void onLongItemClick(View view, int position) {
 
                     }
                 })
@@ -80,9 +81,6 @@ public class ContributorListFragment extends LifecycleFragment {
 
         return view;
     }
-
-
-
 
 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -93,10 +91,10 @@ public class ContributorListFragment extends LifecycleFragment {
         mUtilityViewModel = ViewModelProviders.of(getActivity()).get(UtilityViewModel.class);
 
 
-
-
         mRepositoryViewModel.getApiContributorResponse().observe(this,
-                apiResponse -> {handleResponse(apiResponse);}
+                apiResponse -> {
+                    handleResponse(apiResponse);
+                }
         );
 
 
@@ -114,19 +112,20 @@ public class ContributorListFragment extends LifecycleFragment {
 
 
     private void handleResponse(List<ContributorDataModel> elements) {
-            this.cache=elements;
-            mAdapter.clearContributors();
-            mAdapter.addContributors(elements);
-            marker_progress.setVisibility(View.INVISIBLE);
-            mRecyclerView.setVisibility(View.VISIBLE);
+        this.cache = elements;
+        mAdapter.clearContributors();
+        mAdapter.addContributors(elements);
+        marker_progress.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void manageNetworkError(NetworkErrorObject networkError) {
         if (((NetworkErrorObject) networkError).getEndpointOrigin().equals(Config.CONTRIBUTOR_ENDPOINT))
             handleError(((NetworkErrorObject) networkError).getErrorMsg());
     }
+
     private void handleError(String snackMsg) {
-        Log.e("STEFANO","errore speciale in contributor");
+        Log.d("STEFANO", "insert custom error");
     }
 }
 

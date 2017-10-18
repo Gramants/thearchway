@@ -44,25 +44,10 @@ public class UtilityViewModel extends AndroidViewModel {
     }
 
 
-    public void swapSearchString() {
-        if (!TextUtils.isEmpty(mPersistentStorageProxy.getSearchStringTemp()))
-        {
-            Log.e("STEFANO","savedin good var "+mPersistentStorageProxy.getSearchStringTemp());
-            mPersistentStorageProxy.setSearchString(mPersistentStorageProxy.getSearchStringTemp());
-            mPersistentStorageProxy.setSearchStringTemp("");
-        }
-    }
 
     public LiveData<String> getSearchString() {
-        Log.e("STEFANO","streamed"+mPersistentStorageProxy.getSearchString());
         livedatasavedstring.setValue(mPersistentStorageProxy.getSearchString());
         return livedatasavedstring;
-    }
-
-
-    public void saveSearchStringTemp(String searchstring) {
-        Log.e("STEFANO","saved"+searchstring);
-        mPersistentStorageProxy.setSearchStringTemp(searchstring);
     }
 
 

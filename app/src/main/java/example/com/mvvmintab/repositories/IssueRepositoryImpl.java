@@ -66,13 +66,10 @@ public class IssueRepositoryImpl implements IssueRepository {
             }
         });
 
-            Log.e("STEFANO","ritorno livedataresult network ");
             return liveDataResult;
         }
         else
         {
-            Log.e("STEFANO","ritorno livedataresult db");
-            // the last saved loaded at the startup
             return issueDao.getAllIssue();
 
         }

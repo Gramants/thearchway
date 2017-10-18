@@ -1,7 +1,6 @@
 package example.com.mvvmintab.ui;
 
 
-import android.app.ProgressDialog;
 import android.arch.lifecycle.LifecycleActivity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -33,9 +32,9 @@ public class ViewPagerActivity extends LifecycleActivity {
     private UtilityViewModel mUtilityViewModel;
 
     private SearchView searchview;
-    private ProgressDialog mDialog;
     private CoordinatorLayout mCoordinator;
     private String mSearchString;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +51,7 @@ public class ViewPagerActivity extends LifecycleActivity {
         setupViewPager(viewPager);
 
         searchview = (SearchView) findViewById(R.id.searchstring); // inititate a search view
-        mCoordinator= (CoordinatorLayout) findViewById(R.id.tabanim_maincontent);
+        mCoordinator = (CoordinatorLayout) findViewById(R.id.tabanim_maincontent);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabanim_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -60,9 +59,9 @@ public class ViewPagerActivity extends LifecycleActivity {
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String repo) {
-                        mSearchString=repo;
-                        mUtilityViewModel.askNetWork();
-                        return false;
+                mSearchString = repo;
+                mUtilityViewModel.askNetWork();
+                return false;
             }
 
             @Override
@@ -72,11 +71,9 @@ public class ViewPagerActivity extends LifecycleActivity {
         });
 
 
-
-
         mUtilityViewModel.getSearchString().observe(this, searchString -> {
             searchview.setIconified(false);
-            searchview.setQuery(new String(searchString),false);
+            searchview.setQuery(new String(searchString), false);
 
         });
 
@@ -105,7 +102,7 @@ public class ViewPagerActivity extends LifecycleActivity {
 
         adapter.addFrag(new IssueListFragment(), "Issues");
         adapter.addFrag(new ContributorListFragment(), "Contributors");
-        adapter.addFrag(new FragmentDetail(),"Detail");
+        adapter.addFrag(new FragmentDetail(), "Detail");
         viewPager.setAdapter(adapter);
     }
 
@@ -155,14 +152,11 @@ public class ViewPagerActivity extends LifecycleActivity {
     }
 
 
-
     @Override
     protected void onStart() {
         super.onStart();
-
         searchview.clearFocus();
-
-        getLocalDataIfAny();
+        getStoredData();
 
     }
 
@@ -178,9 +172,10 @@ public class ViewPagerActivity extends LifecycleActivity {
 
     }
 
-    private void getLocalDataIfAny() {
-        mRepositoryViewModel.loadIssues(null, null,false);
-        mRepositoryViewModel.loadContributor(null, null,false);
+    private void getStoredData() {
+        mRepositoryViewModel.loadIssues(null, null, false);
+        mRepositoryViewModel.loadContributor(null, null, false);
+        mUtilityViewModel.getSearchString();
     }
 
 
@@ -193,23 +188,20 @@ public class ViewPagerActivity extends LifecycleActivity {
     }
 
 
-
-    private void doSearch()
-    {
+    private void doSearch() {
         if (mSearchString.length() > 0) {
-        String[] query = mSearchString.split("/");
-        if (query.length == 2) {
-            mUtilityViewModel.setShowDialogIssueAndContributor(true);
-            mRepositoryViewModel.loadIssues(query[0], query[1],true);
-            mRepositoryViewModel.loadContributor(query[0], query[1],true);
-            mUtilityViewModel.saveSearchStringTemp(query[0]+"/"+query[1]);
-            searchview.clearFocus();
+            String[] query = mSearchString.split("/");
+            if (query.length == 2) {
+                mUtilityViewModel.setShowDialogIssueAndContributor(true);
+                mRepositoryViewModel.loadIssues(query[0], query[1], true);
+                mRepositoryViewModel.loadContributor(query[0], query[1], true);
+                searchview.clearFocus();
+            } else {
+                handleError("Error wrong format of input. Required format owner/repository_name");
+            }
         } else {
-            handleError("Error wrong format of input. Required format owner/repository_name");
+            handleError("IssueRepository name empty. Required format owner/repository_name");
         }
-    } else {
-        handleError("IssueRepository name empty. Required format owner/repository_name");
-    }
     }
 
 

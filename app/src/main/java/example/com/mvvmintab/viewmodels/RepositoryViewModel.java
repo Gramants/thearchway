@@ -37,6 +37,9 @@ public class RepositoryViewModel extends AndroidViewModel {
     @Inject
     ContributorRepository mContributorRepository;
 
+    @Inject
+    PersistentStorageProxy mPersistentStorageProxy;
+
 
     public RepositoryViewModel(Application application) {
         super(application);
@@ -55,6 +58,7 @@ public class RepositoryViewModel extends AndroidViewModel {
     public LiveData<NetworkErrorObject> getIssueNetworkErrorResponse() {
         return mIssueRepository.getNetworkError();
     }
+
     public LiveData<NetworkErrorObject> getContributorNetworkErrorResponse() {
         return mContributorRepository.getNetworkError();
     }
@@ -65,12 +69,17 @@ public class RepositoryViewModel extends AndroidViewModel {
 
     public LiveData<List<IssueDataModel>> loadIssues(String user, String repo, Boolean forceremote) {
 
+
         mApiIssueResponse.addSource(
                 mIssueRepository.getIssues(user, repo, forceremote),
                 apiIssueResponse -> mApiIssueResponse.setValue(apiIssueResponse)
         );
 
-        Log.e("STEFANO","loadIssues "+String.valueOf(forceremote));
+        // save searchstring only if some data from remote
+        if ((forceremote) && (getApiIssueResponse().getValue().size()>0)) {
+            saveSearchString(user + "/" + repo);
+        }
+
         return mApiIssueResponse;
     }
 
@@ -91,5 +100,8 @@ public class RepositoryViewModel extends AndroidViewModel {
     }
 
 
+    public void saveSearchString(String searchstring) {
+        mPersistentStorageProxy.setSearchStringTemp(searchstring);
+    }
 
 }

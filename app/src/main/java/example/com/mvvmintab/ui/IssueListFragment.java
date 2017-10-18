@@ -61,7 +61,9 @@ public class IssueListFragment extends LifecycleFragment {
         mUtilityViewModel = ViewModelProviders.of(getActivity()).get(UtilityViewModel.class);
 
         mRepositoryViewModel.getApiIssueResponse().observe(this,
-                apiResponse -> {handleResponse(apiResponse);}
+                apiResponse -> {
+                    handleResponse(apiResponse);
+                }
         );
 
         mRepositoryViewModel.getContributorNetworkErrorResponse().observe(this, networkError -> {
@@ -91,7 +93,6 @@ public class IssueListFragment extends LifecycleFragment {
         mRecyclerView.addItemDecoration(mDividerItemDecoration);
         mAdapter = new IssueDataAdapter(getLayoutInflater());
         mRecyclerView.setAdapter(mAdapter);
-
 
 
         mRecyclerView.addOnItemTouchListener(
@@ -134,27 +135,24 @@ public class IssueListFragment extends LifecycleFragment {
 
 
     private void handleResponse(List<IssueDataModel> elements) {
-            if (!elements.isEmpty())
-            {
+        if (!elements.isEmpty()) {
             this.cache = elements;
             mAdapter.clearIssues();
             mAdapter.addIssues(elements);
             marker_progress.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
-            mUtilityViewModel.swapSearchString();
-             Log.e("STEFANO","handleResponse ");
-            }
+        }
 
     }
-
 
 
     private void manageNetworkError(NetworkErrorObject networkError) {
         if (((NetworkErrorObject) networkError).getEndpointOrigin().equals(Config.ISSUE_ENDPOINT))
             handleError(((NetworkErrorObject) networkError).getErrorMsg());
     }
+
     private void handleError(String snackMsg) {
-        Log.e("STEFANO","errore speciale in issue");
+        Log.d("STEFANO", "insert custom error");
     }
 
 }
