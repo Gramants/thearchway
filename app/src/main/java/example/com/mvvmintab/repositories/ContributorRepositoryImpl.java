@@ -1,29 +1,31 @@
 package example.com.mvvmintab.repositories;
 
+import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.util.Log;
+import android.arch.lifecycle.Transformations;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import example.com.mvvmintab.Config;
 import example.com.mvvmintab.entities.ContributorDataModel;
-import example.com.mvvmintab.entities.IssueDataModel;
 import example.com.mvvmintab.entities.NetworkErrorObject;
 import example.com.mvvmintab.entities.pojos.Contributor;
 import example.com.mvvmintab.repositories.api.GithubApiService;
 import example.com.mvvmintab.repositories.database.ContributorDao;
 import example.com.mvvmintab.repositories.database.ProjectDb;
 import example.com.mvvmintab.repositories.database.asyncdml.ContributorDbManager;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static example.com.mvvmintab.entities.translator.DataTranslator.ContributorTranslator;
-import static example.com.mvvmintab.entities.translator.DataTranslator.IssueTranslator;
 
 
 public class ContributorRepositoryImpl implements ContributorRepository {
@@ -73,12 +75,61 @@ public class ContributorRepositoryImpl implements ContributorRepository {
         }
         else
         {
-            // the last saved loaded at the startup
-            return contributorDao.getAllContributors();
+            // transform the livedata result coming from the DB, change a field and order
+
+            LiveData<List<ContributorDataModel>> transformedDbOutput=
+                    Transformations.switchMap(contributorDao.getAllContributors(),
+                            new Function<List<ContributorDataModel>, LiveData<List<ContributorDataModel>>>() {
+                                @Override
+                                public LiveData<List<ContributorDataModel>> apply(List<ContributorDataModel> contributorDataModels) {
+
+                                    ArrayList<ContributorDataModel> result=new ArrayList<>();
+                                    for (ContributorDataModel customer : contributorDataModels) {
+                                        customer.setLogin(customer.getLogin()+" transformed");
+                                        result.add(customer);
+                                    }
+                                  Collections.sort(result, new CustomComparator());
+                                  return getTransformedDbResult(result);
+                                }
+                            });
+/*
+                                @Override
+                                public List<String> apply(List<Customer> customers) {
+                                    ArrayList<String> result=new ArrayList<>();
+
+                                    for (Customer customer : customers) {
+                                        result.add(customer.id);
+                                    }
+
+                                    return(result);
+                                }
+                            });
+*/
+
+            //return contributorDao.getAllContributors();
+            return transformedDbOutput;
 
         }
 
     }
+
+    private LiveData<List<ContributorDataModel>> getTransformedDbResult(List<ContributorDataModel> result) {
+        return new LiveData<List<ContributorDataModel>>() {
+            @Override
+            protected void onActive() {
+                setValue(result);
+            }
+        };
+    }
+
+
+    public class CustomComparator implements Comparator<ContributorDataModel> {
+        @Override
+        public int compare(ContributorDataModel o1, ContributorDataModel o2) {
+            return o1.getLogin().compareTo(o2.getLogin());
+        }
+    }
+
 
     @Override
     public LiveData<ContributorDataModel> getContributorFromDb(int id) {
